@@ -128,6 +128,18 @@ async def async_setup_entry(
                                entry.entry_id, model),
     ])
 
+    # Active alarms summary sensor (SensorEntity, belongs in sensor domain)
+    try:
+        model_folder = model.replace("_", "").upper()
+        module = __import__(
+            f"custom_components.sprsun.models.{model_folder}.sensor_alarm",
+            fromlist=["SprsunActiveAlarmsSensor"],
+        )
+        alarm_class = getattr(module, "SprsunActiveAlarmsSensor")
+        entities.append(alarm_class(coordinator.client, entry.entry_id, model))
+    except Exception as err:
+        _LOGGER.error("Failed to load alarm sensor: %s", err)
+
     async_add_entities(entities)
 
 

@@ -95,7 +95,7 @@ class SprsunNumberEntity(NumberEntity):
 
         slug = slugify(f"sprsun_{model}_{definition['name']}")
 
-        self.entity_id = f"sensor.{slug}"
+        self.entity_id = f"number.{slug}"
         self._attr_native_min_value = definition["min"]
         self._attr_native_max_value = definition["max"]
         self._attr_native_step = definition["step"]

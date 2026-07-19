@@ -44,21 +44,6 @@ async def async_setup_entry(
 
     async_add_entities(entities)
 
-    # Sensor aktywnych alarmów
-    try:
-        model_folder = model.replace("_", "").upper()
-
-        module = __import__(
-        f"custom_components.sprsun.models.{model_folder}.sensor_alarm",
-        fromlist=["SprsunActiveAlarmsSensor"],
-        )
-
-        alarm_class = getattr(module, "SprsunActiveAlarmsSensor")
-        alarm_sensor = alarm_class(coordinator, entry.entry_id, model)
-        async_add_entities([alarm_sensor])
-    except Exception as err:
-        _LOGGER.error("Failed to load alarm sensor: %s", err)
-
 
 class SprsunBinarySensor(BinarySensorEntity):
     """Binary sensor based on coordinator and discrete inputs."""
