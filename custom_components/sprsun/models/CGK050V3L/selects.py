@@ -39,8 +39,8 @@ ENTITIES = [
             0: "Deaktiveret",
             1: "Kun Varmtvand",
             2: "Kun opvarmning",
-            3: "Varmtvand + ogrzewanie",
-            4: "Independent",
+            3: "Varmtvand + opvarmning",
+            4: "Uafhængig",
         },
         "icons": {
             0: "mdi:radiator-off",

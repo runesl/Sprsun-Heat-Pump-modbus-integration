@@ -6,8 +6,8 @@ SENSORS = [
         "register": 11,
         "icon": "mdi:valve-open",
         "mapping": {
-            1: "C.W.U.",
-            2: "C.O.",
+            1: "Varmtvand",
+            2: "Opvarmning",
         },
         "icon_map": {
             1: "mdi:valve-open",
@@ -207,8 +207,8 @@ SENSORS = [
         "icon": "mdi:information",
         "mapping": {
             0: "OK",
-            1: "Sterowanie",
-            2: "Graniczny",
+            1: "Styring",
+            2: "Grænseværdi",
         },
         "icon_map": {
             0: "mdi:check-circle",
@@ -225,10 +225,10 @@ SENSORS = [
         "mapping": {
             0: "OK",
             1: "OK",
-            2: "Lav przegrzanie",
-            3: "Lav ciśnienie",
-            4: "Høj ciśnienie",
-            5: "Wysoka temp skraplacza",
+            2: "Lav overhedning",
+            3: "Lavt tryk",
+            4: "Højt tryk",
+            5: "Høj kondensatortemperatur",
         },
         "icon_map": {
             0: "mdi:check-circle",
@@ -286,17 +286,17 @@ SENSORS = [
         "scale": 1,
         "icon": "mdi:information",
         "mapping": {
-            0: "Przygotowanie",
-            1: "Praca",
-            2: "Stop Alarm",
+            0: "Forberedelse",
+            1: "Drift",
+            2: "Stop alarm",
             3: "Stop timer",
-            4: "Stop obsługa",
-            5: "Stop Sterowanie",
+            4: "Stop service",
+            5: "Stop styring",
             6: "Stop",
-            7: "Tryb ręczny",
-            8: "Antyzamarzanie",
+            7: "Manuel tilstand",
+            8: "Frostsikring",
             9: "Stop AC linkage",
-            10: "Zmiana trybu",
+            10: "Skift tilstand",
         },
         "icon_map": {
             0: "mdi:information",
