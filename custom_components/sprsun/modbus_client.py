@@ -28,33 +28,34 @@ class HeatPumpModbusClient:
                 port=self._port,
                 timeout=5,
             )
-            _LOGGER.debug("AsyncModbusTcpClient created")
+            _LOGGER.debug("AsyncModbusTcpClient created successfully")
 
             # Try to set unit_id via available attributes
-            unit_id_set = False
             if hasattr(self._client, "unit_id"):
                 self._client.unit_id = self._unit_id
                 _LOGGER.debug("Set unit_id via unit_id attribute: %s", self._unit_id)
-                unit_id_set = True
             elif hasattr(self._client, "unit"):
                 self._client.unit = self._unit_id
                 _LOGGER.debug("Set unit_id via unit attribute: %s", self._unit_id)
-                unit_id_set = True
             elif hasattr(self._client, "slave"):
                 self._client.slave = self._unit_id
                 _LOGGER.debug("Set unit_id via slave attribute: %s", self._unit_id)
-                unit_id_set = True
             else:
                 _LOGGER.warning("AsyncModbusTcpClient has no unit_id/unit/slave attribute - "
                                "unit_id may need to be passed per-call in pymodbus 3.x")
 
             _LOGGER.debug("Calling AsyncModbusTcpClient.connect() for %s:%s with 5s timeout", 
                          self._host, self._port)
-            result = await self._client.connect()
-            _LOGGER.debug("Connection result: %s (type: %s)", result, type(result).__name__)
+            try:
+                result = await self._client.connect()
+                _LOGGER.debug("AsyncModbusTcpClient.connect() returned: %s (type: %s)", result, type(result).__name__)
+            except Exception as connect_err:
+                _LOGGER.error("Exception during AsyncModbusTcpClient.connect(): %s (type: %s)", 
+                             connect_err, type(connect_err).__name__)
+                raise
             
             connected = getattr(self._client, "connected", False)
-            _LOGGER.debug("After connect(), client.connected = %s (type: %s)", connected, type(connected).__name__)
+            _LOGGER.debug("After connect(), client.connected = %s", connected)
             
             if not connected:
                 _LOGGER.error("Connection failed: connected attribute is False after await connect(). "
@@ -71,7 +72,7 @@ class HeatPumpModbusClient:
         except ConnectionError:
             raise
         except Exception as err:
-            _LOGGER.error("Modbus connection error: %s", err)
+            _LOGGER.error("Modbus connection error: %s (type: %s)", err, type(err).__name__)
             raise ConnectionError(f"Cannot connect to Modbus heat pump: {err}") from err
 
     async def close(self):
