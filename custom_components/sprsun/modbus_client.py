@@ -28,29 +28,42 @@ class HeatPumpModbusClient:
                 port=self._port,
                 timeout=5,
             )
+            _LOGGER.debug("AsyncModbusTcpClient created")
 
-            # Set unit_id BEFORE connecting
+            # Try to set unit_id via available attributes
+            unit_id_set = False
             if hasattr(self._client, "unit_id"):
                 self._client.unit_id = self._unit_id
                 _LOGGER.debug("Set unit_id via unit_id attribute: %s", self._unit_id)
+                unit_id_set = True
             elif hasattr(self._client, "unit"):
                 self._client.unit = self._unit_id
                 _LOGGER.debug("Set unit_id via unit attribute: %s", self._unit_id)
+                unit_id_set = True
             elif hasattr(self._client, "slave"):
                 self._client.slave = self._unit_id
                 _LOGGER.debug("Set unit_id via slave attribute: %s", self._unit_id)
+                unit_id_set = True
             else:
-                _LOGGER.warning("Could not find unit_id attribute in AsyncModbusTcpClient")
+                _LOGGER.warning("AsyncModbusTcpClient has no unit_id/unit/slave attribute - "
+                               "unit_id may need to be passed per-call in pymodbus 3.x")
 
-            _LOGGER.debug("Calling AsyncModbusTcpClient.connect() for %s:%s", self._host, self._port)
+            _LOGGER.debug("Calling AsyncModbusTcpClient.connect() for %s:%s with 5s timeout", 
+                         self._host, self._port)
             result = await self._client.connect()
-            _LOGGER.debug("Connection result: %s, connected attribute: %s", result, getattr(self._client, "connected", False))
+            _LOGGER.debug("Connection result: %s (type: %s)", result, type(result).__name__)
             
-            if not getattr(self._client, "connected", False):
-                _LOGGER.error("Connection failed: connected attribute is False after await connect()")
+            connected = getattr(self._client, "connected", False)
+            _LOGGER.debug("After connect(), client.connected = %s (type: %s)", connected, type(connected).__name__)
+            
+            if not connected:
+                _LOGGER.error("Connection failed: connected attribute is False after await connect(). "
+                             "This may mean: (1) Device unreachable at tcp://%s:%s, "
+                             "(2) Modbus timeout (configured: 5s), or (3) Protocol error", 
+                             self._host, self._port)
                 raise ConnectionError("Cannot connect to Modbus heat pump")
             
-            _LOGGER.info("Successfully connected to Modbus heat pump")
+            _LOGGER.info("Successfully connected to Modbus heat pump tcp://%s:%s", self._host, self._port)
         except TypeError as err:
             _LOGGER.error("Invalid Modbus configuration: port=%s (type %s), unit_id=%s (type %s): %s", 
                          self._port, type(self._port).__name__, self._unit_id, type(self._unit_id).__name__, err)
