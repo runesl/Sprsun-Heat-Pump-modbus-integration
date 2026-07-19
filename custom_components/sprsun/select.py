@@ -45,7 +45,7 @@ async def async_setup_entry(
 
 
 class SprsunGenericSelect(SelectEntity):
-    """Select based on coordinator and Modbus registers."""}{
+    """Select based on coordinator and Modbus registers."""
 
     _attr_should_poll = False
 
@@ -98,7 +98,7 @@ class SprsunGenericSelect(SelectEntity):
 
     @property
     def icon(self):
-        """Icon depending on option or constant."""}{
+        """Icon depending on option or constant."""
         if self._icons and self._attr_current_option:
             raw = self._reverse_map.get(self._attr_current_option)
             return self._icons.get(raw, self._icon)
@@ -110,7 +110,7 @@ class SprsunGenericSelect(SelectEntity):
 
     @property
     def current_option(self):
-        """Current select option."""}{
+        """Current select option."""
         raw = self.coordinator.data.get(self._register)
         if raw is None:
             return None

@@ -145,7 +145,7 @@ class SprsunNumberEntity(NumberEntity):
 
 
 class SprsunCounterNumberEntity(NumberEntity, RestoreEntity):
-    """Logical counter based on existing HA sensors."""}{
+    """Logical counter based on existing HA sensors."""
 
     _attr_should_poll = False
     _attr_native_min_value = 0
