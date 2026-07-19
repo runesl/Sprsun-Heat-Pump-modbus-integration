@@ -29,16 +29,28 @@ class HeatPumpModbusClient:
                 timeout=5,
             )
 
+            # Set unit_id BEFORE connecting
             if hasattr(self._client, "unit_id"):
                 self._client.unit_id = self._unit_id
+                _LOGGER.debug("Set unit_id via unit_id attribute: %s", self._unit_id)
             elif hasattr(self._client, "unit"):
                 self._client.unit = self._unit_id
+                _LOGGER.debug("Set unit_id via unit attribute: %s", self._unit_id)
             elif hasattr(self._client, "slave"):
                 self._client.slave = self._unit_id
+                _LOGGER.debug("Set unit_id via slave attribute: %s", self._unit_id)
+            else:
+                _LOGGER.warning("Could not find unit_id attribute in AsyncModbusTcpClient")
 
-            await self._client.connect()
+            _LOGGER.debug("Calling AsyncModbusTcpClient.connect() for %s:%s", self._host, self._port)
+            result = await self._client.connect()
+            _LOGGER.debug("Connection result: %s, connected attribute: %s", result, getattr(self._client, "connected", False))
+            
             if not getattr(self._client, "connected", False):
+                _LOGGER.error("Connection failed: connected attribute is False after await connect()")
                 raise ConnectionError("Cannot connect to Modbus heat pump")
+            
+            _LOGGER.info("Successfully connected to Modbus heat pump")
         except TypeError as err:
             _LOGGER.error("Invalid Modbus configuration: port=%s (type %s), unit_id=%s (type %s): %s", 
                          self._port, type(self._port).__name__, self._unit_id, type(self._unit_id).__name__, err)
