@@ -20,23 +20,34 @@ class HeatPumpModbusClient:
         if self._client is not None and getattr(self._client, "connected", False):
             return
 
-        _LOGGER.info("Connecting to Modbus heat pump %s:%s (unit_id=%s)", self._host, self._port, self._unit_id)
-        self._client = AsyncModbusTcpClient(
-            host=self._host,
-            port=self._port,
-            timeout=5,
-        )
+        _LOGGER.info("Connecting to Modbus heat pump tcp://%s:%s (unit_id=%s)", self._host, self._port, self._unit_id)
+        
+        try:
+            self._client = AsyncModbusTcpClient(
+                host=self._host,
+                port=self._port,
+                timeout=5,
+            )
 
-        if hasattr(self._client, "unit_id"):
-            self._client.unit_id = self._unit_id
-        elif hasattr(self._client, "unit"):
-            self._client.unit = self._unit_id
-        elif hasattr(self._client, "slave"):
-            self._client.slave = self._unit_id
+            if hasattr(self._client, "unit_id"):
+                self._client.unit_id = self._unit_id
+            elif hasattr(self._client, "unit"):
+                self._client.unit = self._unit_id
+            elif hasattr(self._client, "slave"):
+                self._client.slave = self._unit_id
 
-        await self._client.connect()
-        if not getattr(self._client, "connected", False):
-            raise ConnectionError("Cannot connect to Modbus heat pump")
+            await self._client.connect()
+            if not getattr(self._client, "connected", False):
+                raise ConnectionError("Cannot connect to Modbus heat pump")
+        except TypeError as err:
+            _LOGGER.error("Invalid Modbus configuration: port=%s (type %s), unit_id=%s (type %s): %s", 
+                         self._port, type(self._port).__name__, self._unit_id, type(self._unit_id).__name__, err)
+            raise ConnectionError(f"Invalid Modbus configuration: {err}") from err
+        except ConnectionError:
+            raise
+        except Exception as err:
+            _LOGGER.error("Modbus connection error: %s", err)
+            raise ConnectionError(f"Cannot connect to Modbus heat pump: {err}") from err
 
     async def close(self):
         """Graceful close of Modbus TCP connection."""
@@ -67,8 +78,12 @@ class HeatPumpModbusClient:
     async def read_holding_registers(self, address: int, count: int = 1) -> list[int] | None:
 
         async with self._lock:
-            if self._client is None or not getattr(self._client, "connected", False):
-                await self.connect()
+            try:
+                if self._client is None or not getattr(self._client, "connected", False):
+                    await self.connect()
+            except ConnectionError as err:
+                _LOGGER.error("Failed to connect to Modbus: %s", err)
+                return None
 
             try:
 
@@ -93,8 +108,12 @@ class HeatPumpModbusClient:
     async def read_discrete_inputs(self, address: int, count: int = 1) -> list[int] | None:
 
         async with self._lock:
-            if self._client is None or not getattr(self._client, "connected", False):
-                await self.connect()
+            try:
+                if self._client is None or not getattr(self._client, "connected", False):
+                    await self.connect()
+            except ConnectionError as err:
+                _LOGGER.error("Failed to connect to Modbus: %s", err)
+                return None
 
             try:
                 rr = await self._client.read_discrete_inputs(address=address, count=count)
@@ -118,8 +137,12 @@ class HeatPumpModbusClient:
     async def write_register(self, address: int, value: int):
         """FC6 – write single holding register."""
         async with self._lock:
-            if self._client is None or not getattr(self._client, "connected", False):
-                await self.connect()
+            try:
+                if self._client is None or not getattr(self._client, "connected", False):
+                    await self.connect()
+            except ConnectionError as err:
+                _LOGGER.error("Failed to connect to Modbus: %s", err)
+                return False
 
             try:
                 rr = await self._client.write_register(address=address, value=value )
@@ -137,8 +160,12 @@ class HeatPumpModbusClient:
     async def write_registers(self, address: int, values: list[int]):
         """FC16 – zapis wielu rejestrów holding."""
         async with self._lock:
-            if self._client is None or not getattr(self._client, "connected", False):
-                await self.connect()
+            try:
+                if self._client is None or not getattr(self._client, "connected", False):
+                    await self.connect()
+            except ConnectionError as err:
+                _LOGGER.error("Failed to connect to Modbus: %s", err)
+                return False
 
             try:
                 rr = await self._client.write_registers(address=address, values=values )
@@ -156,8 +183,12 @@ class HeatPumpModbusClient:
     async def write_coil(self, address: int, value: bool):
         """FC5 – zapis pojedynczego bitu."""
         async with self._lock:
-            if self._client is None or not getattr(self._client, "connected", False):
-                await self.connect()
+            try:
+                if self._client is None or not getattr(self._client, "connected", False):
+                    await self.connect()
+            except ConnectionError as err:
+                _LOGGER.error("Failed to connect to Modbus: %s", err)
+                return False
 
             try:
                 rr = await self._client.write_coil(address=address, value=value )
@@ -174,8 +205,12 @@ class HeatPumpModbusClient:
     async def read_coils(self, address: int, count: int = 1) -> list[bool] | None:
         """FC1 – read coils."""
         async with self._lock:
-            if self._client is None or not getattr(self._client, "connected", False):
-                await self.connect()
+            try:
+                if self._client is None or not getattr(self._client, "connected", False):
+                    await self.connect()
+            except ConnectionError as err:
+                _LOGGER.error("Failed to connect to Modbus: %s", err)
+                return None
 
             try:
                 rr = await self._client.read_coils(address=address, count=count)
