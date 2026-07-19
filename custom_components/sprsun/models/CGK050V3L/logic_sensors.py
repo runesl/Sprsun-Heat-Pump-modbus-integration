@@ -54,7 +54,14 @@ class SprsunBaseTimerSensor(RestoreEntity, SensorEntity):
     _attr_should_poll = False
     _unit = "h"
 
-    def __init__(self, name, unique_id, source_entity_id, reset_mode, entry_id, model):
+    def __init__(
+            self,
+            name,
+            unique_id,
+            source_entity_id,
+            reset_mode,
+            entry_id,
+            model):
         self._attr_name = name
         self._attr_unique_id = unique_id
         self._source_entity_id = source_entity_id
@@ -94,7 +101,7 @@ class SprsunBaseTimerSensor(RestoreEntity, SensorEntity):
     def device_info(self):
         return {
             "identifiers": {(DOMAIN, self._entry_id)},
-            "name": f"Pompa ciepła Sprsun {self._model.upper().replace('_', '-')}",
+            "name": f"Sprsun varmepumpe {self._model.upper().replace('_', '-')}",
             "manufacturer": "Sprsun",
             "model": self._model.upper().replace('_', '-'),
         }
@@ -104,7 +111,8 @@ class SprsunBaseTimerSensor(RestoreEntity, SensorEntity):
 
         last_state = await self.async_get_last_state()
         if last_state:
-            self._seconds = _parse_float(last_state.attributes.get("seconds"), 0.0)
+            self._seconds = _parse_float(
+                last_state.attributes.get("seconds"), 0.0)
             reset_str = last_state.attributes.get("last_reset")
             if reset_str:
                 try:
@@ -124,7 +132,6 @@ class SprsunBaseTimerSensor(RestoreEntity, SensorEntity):
         self._unsub_interval = async_track_time_interval(
             self.hass, self._handle_interval, timedelta(seconds=60)
         )
-
 
     async def async_will_remove_from_hass(self):
         if self._unsub_interval:
@@ -150,7 +157,8 @@ class SprsunBaseTimerSensor(RestoreEntity, SensorEntity):
                 do_reset = True
 
         elif self._reset_mode == "monthly":
-            if (today.year, today.month) != (self._last_reset.year, self._last_reset.month):
+            if (today.year, today.month) != (
+                    self._last_reset.year, self._last_reset.month):
                 do_reset = True
 
         elif self._reset_mode == "yearly":
@@ -253,7 +261,7 @@ class SprsunBaseCounterSensor(RestoreEntity, SensorEntity):
     def device_info(self):
         return {
             "identifiers": {(DOMAIN, self._entry_id)},
-            "name": f"Pompa ciepła Sprsun {self._model.upper().replace('_', '-')}",
+            "name": f"Sprsun varmepumpe {self._model.upper().replace('_', '-')}",
             "manufacturer": "Sprsun",
             "model": self._model.upper().replace('_', '-'),
         }
@@ -292,7 +300,8 @@ class SprsunBaseCounterSensor(RestoreEntity, SensorEntity):
                 do_reset = True
 
         elif self._reset_mode == "monthly":
-            if (today.year, today.month) != (self._last_reset.year, self._last_reset.month):
+            if (today.year, today.month) != (
+                    self._last_reset.year, self._last_reset.month):
                 do_reset = True
 
         elif self._reset_mode == "yearly":
@@ -311,6 +320,7 @@ class SprsunBaseCounterSensor(RestoreEntity, SensorEntity):
 # ============================================================
 #  LICZNIK STARTÓW SPRĘŻARKI
 # ============================================================
+
 
 class SprsunCompressorStartCounter(SprsunBaseCounterSensor):
     def __init__(self, name, unique_id, reset_mode, entry_id, model):
@@ -452,7 +462,7 @@ class SprsunOwnershipDaysSensor(RestoreEntity, SensorEntity):
     def device_info(self):
         return {
             "identifiers": {(DOMAIN, self._entry_id)},
-            "name": f"Pompa ciepła Sprsun {self._model.upper().replace('_', '-')}",
+            "name": f"Sprsun varmepumpe {self._model.upper().replace('_', '-')}",
             "manufacturer": "Sprsun",
             "model": self._model.upper().replace('_', '-'),
         }
