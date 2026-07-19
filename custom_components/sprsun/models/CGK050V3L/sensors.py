@@ -133,7 +133,7 @@ SENSORS = [
         "descripion": " Na sterowniku znajduje się w parametrach pod nazwą Y3: Pompa obieg. (↩/Enginer mask/Parametry, pozycja Sn11)"
     },
     {
-        "name": "Ventilator 1 sterowanie",
+        "name": "Ventilator 1 styring",
         "unique_id": "dc_fan_1_output",
         "register": 199,
         "unit": "rpm",
@@ -142,7 +142,7 @@ SENSORS = [
         "description": "Fan 1 output",
     },
     {
-        "name": "Ventilator 1 pomiar",
+        "name": "Ventilator 1 måling",
         "unique_id": "dc_fan_1_feedback",
         "register": 202,
         "unit": "rpm",
@@ -151,7 +151,7 @@ SENSORS = [
         "description": "DC Fan 1 feedback",
     },
     {
-        "name": "Ventilator 2 sterowanie",
+        "name": "Ventilator 2 styring",
         "unique_id": "dc_fan_2_output",
         "register": 201,
         "unit": "rpm",
@@ -159,7 +159,7 @@ SENSORS = [
         "icon": "mdi:fan",
     },
     {
-        "name": "Ventilator 2 pomiar",
+        "name": "Ventilator 2 måling",
         "unique_id": "dc_fan_2_feedback",
         "register": 200,
         "unit": "rpm",
