@@ -2,6 +2,7 @@ import logging
 from homeassistant.components.button import ButtonEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.util import slugify
 from homeassistant.config_entries import ConfigEntry
 
 from .const import DOMAIN
@@ -61,14 +62,7 @@ class SprsunGenericButton(ButtonEntity):
         self._attr_unique_id = f"{DOMAIN}_{model}_button_{self._register}"
         self._attr_icon = definition.get("icon", "mdi:gesture-tap-button")
 
-        slug = (
-            f"sprsun_{model}_{definition['name']}"
-            .lower()
-            .replace(" ", "_")
-            .replace("ą", "a").replace("ć", "c").replace("ę", "e")
-            .replace("ł", "l").replace("ń", "n").replace("ó", "o")
-            .replace("ś", "s").replace("ź", "z").replace("ż", "z")
-        )
+        slug = slugify(f"sprsun_{model}_{definition['name']}")
         self.entity_id = f"button.{slug}"
 
         self._attr_available = True

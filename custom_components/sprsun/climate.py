@@ -15,6 +15,7 @@ from homeassistant.const import UnitOfTemperature
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.util import slugify
 
 from .const import DOMAIN
 from .coordinator import SprsunCoordinator
@@ -108,21 +109,8 @@ class HeatPumpClimate(ClimateEntity):
         self._attr_name = definition.get("name")
         self._attr_unique_id = definition.get("unique_id")
 
-        # Create a "nice" entity_id (without Polish diacritics)
-        slug = (
-            f"sprsun_{self._model}_{self._attr_name}"
-            .lower()
-            .replace(" ", "_")
-            .replace("ą", "a")
-            .replace("ć", "c")
-            .replace("ę", "e")
-            .replace("ł", "l")
-            .replace("ń", "n")
-            .replace("ó", "o")
-            .replace("ś", "s")
-            .replace("ź", "z")
-            .replace("ż", "z")
-        )
+        # Build a HA-valid entity_id even for non-ASCII names (e.g. Danish letters)
+        slug = slugify(f"sprsun_{self._model}_{self._attr_name}")
         self.entity_id = f"climate.{slug}"
 
         # Zakres i krok temperatury zadanej – używane przez HA

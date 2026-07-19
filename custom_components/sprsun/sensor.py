@@ -2,6 +2,7 @@ import logging
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.util import slugify
 from homeassistant.config_entries import ConfigEntry
 
 from .const import DOMAIN
@@ -150,14 +151,7 @@ class SprsunGenericSensor(SensorEntity):
         self._attr_name = definition["name"]
         self._attr_unique_id = f"{DOMAIN}_{model}_sensor_{self._register}"
 
-        slug = (
-            f"sprsun_{model}_{definition['name']}"
-            .lower()
-            .replace(" ", "_")
-            .replace("ą", "a").replace("ć", "c").replace("ę", "e")
-            .replace("ł", "l").replace("ń", "n").replace("ó", "o")
-            .replace("ś", "s").replace("ź", "z").replace("ż", "z")
-        )
+        slug = slugify(f"sprsun_{model}_{definition['name']}")
 
         self.entity_id = f"sensor.{slug}"
 

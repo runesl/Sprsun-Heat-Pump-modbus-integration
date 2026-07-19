@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 import logging
 
 from pymodbus.client import AsyncModbusTcpClient
@@ -17,7 +18,9 @@ class HeatPumpModbusClient:
         self._lock = asyncio.Lock()
 
     async def connect(self):
-        if self._client is not None and getattr(self._client, "connected", False):
+        # In pymodbus 3.x, the .connected attribute may not reflect actual state
+        # So we check if client exists and trust that it was previously connected
+        if self._client is not None:
             return
 
         _LOGGER.info("Connecting to Modbus heat pump tcp://%s:%s (unit_id=%s)", self._host, self._port, self._unit_id)
@@ -26,11 +29,11 @@ class HeatPumpModbusClient:
             self._client = AsyncModbusTcpClient(
                 host=self._host,
                 port=self._port,
-                timeout=5,
+                timeout=30,
             )
             _LOGGER.debug("AsyncModbusTcpClient created successfully")
 
-            # Try to set unit_id via available attributes
+            # Try to set unit_id via available attributes (for compatibility)
             if hasattr(self._client, "unit_id"):
                 self._client.unit_id = self._unit_id
                 _LOGGER.debug("Set unit_id via unit_id attribute: %s", self._unit_id)
@@ -41,24 +44,17 @@ class HeatPumpModbusClient:
                 self._client.slave = self._unit_id
                 _LOGGER.debug("Set unit_id via slave attribute: %s", self._unit_id)
             else:
-                _LOGGER.warning("AsyncModbusTcpClient has no unit_id/unit/slave attribute - "
-                               "unit_id may need to be passed per-call in pymodbus 3.x")
+                _LOGGER.debug("AsyncModbusTcpClient has no unit_id/unit/slave attribute - "
+                             "unit_id will be passed per-call in pymodbus 3.x")
 
             _LOGGER.debug("Calling AsyncModbusTcpClient.connect() for %s:%s with 5s timeout", 
                          self._host, self._port)
-            try:
-                result = await self._client.connect()
-                _LOGGER.debug("AsyncModbusTcpClient.connect() returned: %s (type: %s)", result, type(result).__name__)
-            except Exception as connect_err:
-                _LOGGER.error("Exception during AsyncModbusTcpClient.connect(): %s (type: %s)", 
-                             connect_err, type(connect_err).__name__)
-                raise
+            result = await self._client.connect()
+            _LOGGER.debug("AsyncModbusTcpClient.connect() returned: %s (type: %s)", result, type(result).__name__)
             
-            connected = getattr(self._client, "connected", False)
-            _LOGGER.debug("After connect(), client.connected = %s", connected)
-            
-            if not connected:
-                _LOGGER.error("Connection failed: connected attribute is False after await connect(). "
+            # In pymodbus 3.x, trust the return value, not the .connected attribute
+            if not result:
+                _LOGGER.error("Connection failed: AsyncModbusTcpClient.connect() returned False. "
                              "This may mean: (1) Device unreachable at tcp://%s:%s, "
                              "(2) Modbus timeout (configured: 5s), or (3) Protocol error", 
                              self._host, self._port)
@@ -105,19 +101,20 @@ class HeatPumpModbusClient:
 
         async with self._lock:
             try:
-                if self._client is None or not getattr(self._client, "connected", False):
+                if self._client is None:
                     await self.connect()
             except ConnectionError as err:
                 _LOGGER.error("Failed to connect to Modbus: %s", err)
                 return None
 
             try:
-
-                rr = await self._client.read_holding_registers(address=address, count=count)
+                rr = await self._client.read_holding_registers(
+                    address=address, count=count, **self._unit_kwargs(self._client.read_holding_registers)
+                )
             except ModbusException as err:
                 _LOGGER.error("Modbus error reading address %s: %s", address, err)
                 return None
-            except Exception as err:  # na wypadek innych wyjątków
+            except Exception as err:
                 _LOGGER.error("Unexpected error reading address %s: %s", address, err)
                 return None
 
@@ -135,14 +132,16 @@ class HeatPumpModbusClient:
 
         async with self._lock:
             try:
-                if self._client is None or not getattr(self._client, "connected", False):
+                if self._client is None:
                     await self.connect()
             except ConnectionError as err:
                 _LOGGER.error("Failed to connect to Modbus: %s", err)
                 return None
 
             try:
-                rr = await self._client.read_discrete_inputs(address=address, count=count)
+                rr = await self._client.read_discrete_inputs(
+                    address=address, count=count, **self._unit_kwargs(self._client.read_discrete_inputs)
+                )
             except ModbusException as err:
                 _LOGGER.error("Modbus error reading DI %s: %s", address, err)
                 return None
@@ -164,14 +163,16 @@ class HeatPumpModbusClient:
         """FC6 – write single holding register."""
         async with self._lock:
             try:
-                if self._client is None or not getattr(self._client, "connected", False):
+                if self._client is None:
                     await self.connect()
             except ConnectionError as err:
                 _LOGGER.error("Failed to connect to Modbus: %s", err)
                 return False
 
             try:
-                rr = await self._client.write_register(address=address, value=value )
+                rr = await self._client.write_register(
+                    address=address, value=value, **self._unit_kwargs(self._client.write_register)
+                )
             except Exception as err:
                 _LOGGER.error("Modbus error writing register %s: %s", address, err)
                 return False
@@ -194,7 +195,9 @@ class HeatPumpModbusClient:
                 return False
 
             try:
-                rr = await self._client.write_registers(address=address, values=values )
+                rr = await self._client.write_registers(
+                    address=address, values=values, **self._unit_kwargs(self._client.write_registers)
+                )
             except Exception as err:
                 _LOGGER.error("Modbus error writing registers %s: %s", address, err)
                 return False
@@ -217,7 +220,9 @@ class HeatPumpModbusClient:
                 return False
 
             try:
-                rr = await self._client.write_coil(address=address, value=value )
+                rr = await self._client.write_coil(
+                    address=address, value=value, **self._unit_kwargs(self._client.write_coil)
+                )
             except Exception as err:
                 _LOGGER.error("Modbus error writing coil %s: %s", address, err)
                 return False
@@ -239,7 +244,9 @@ class HeatPumpModbusClient:
                 return None
 
             try:
-                rr = await self._client.read_coils(address=address, count=count)
+                rr = await self._client.read_coils(
+                    address=address, count=count, **self._unit_kwargs(self._client.read_coils)
+                )
             except Exception as err:
                 _LOGGER.error("Modbus error reading coils %s: %s", address, err)
                 return None
@@ -254,3 +261,14 @@ class HeatPumpModbusClient:
 
             return rr.bits[:count]   # return list of bools
 
+    def _unit_kwargs(self, method) -> dict:
+        """Pass unit identifier using the keyword supported by installed pymodbus."""
+        try:
+            params = inspect.signature(method).parameters
+        except (TypeError, ValueError):
+            return {}
+
+        for key in ("slave", "device_id", "unit", "unit_id"):
+            if key in params:
+                return {key: self._unit_id}
+        return {}

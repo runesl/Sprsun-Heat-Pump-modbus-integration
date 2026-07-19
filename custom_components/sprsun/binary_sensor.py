@@ -2,6 +2,7 @@ import logging
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.util import slugify
 from homeassistant.config_entries import ConfigEntry
 
 from .const import DOMAIN
@@ -76,14 +77,7 @@ class SprsunBinarySensor(BinarySensorEntity):
         self._attr_name = definition["name"]
         self._attr_unique_id = f"{DOMAIN}_{model}_binary_{self._address}"
 
-        slug = (
-            f"sprsun_{model}_{definition['name']}"
-            .lower()
-            .replace(" ", "_")
-            .replace("ą", "a").replace("ć", "c").replace("ę", "e")
-            .replace("ł", "l").replace("ń", "n").replace("ó", "o")
-            .replace("ś", "s").replace("ź", "z").replace("ż", "z")
-        )
+        slug = slugify(f"sprsun_{model}_{definition['name']}")
         self.entity_id = f"binary_sensor.{slug}"
 
         self._attr_device_class = definition.get("device_class")
