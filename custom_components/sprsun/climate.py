@@ -19,7 +19,7 @@ from homeassistant.config_entries import ConfigEntry
 from .const import DOMAIN
 from .coordinator import SprsunCoordinator
 
-# Import definicji climate z modeli
+# Import climate definitions from models
 from .models.CGK025V3L.climates import ENTITIES as CLIMATES_025
 from .models.CGK030V3L.climates import ENTITIES as CLIMATES_030
 from .models.CGK040V3L.climates import ENTITIES as CLIMATES_040
@@ -45,7 +45,7 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
-    """Tworzy encje climate na podstawie modelu i definicji."""
+    """Create climate entities based on model and definitions."""
     coordinator: SprsunCoordinator = hass.data[DOMAIN][entry.entry_id]["coordinator"]
     client = hass.data[DOMAIN][entry.entry_id]["client"]
     model = hass.data[DOMAIN][entry.entry_id]["model"]
@@ -64,7 +64,7 @@ async def async_setup_entry(
 #  UNIWERSALNY SILNIK CLIMATE – odczyt HVAC + presety
 # ============================================================
 class HeatPumpClimate(ClimateEntity):
-    """Uniwersalny silnik Climate — logika zdefiniowana w climates.py."""
+    """Universal Climate engine — logic defined in climates.py."""
 
     def __init__(self, coordinator, definition: dict, client, model: str):
         self.coordinator = coordinator
@@ -108,7 +108,7 @@ class HeatPumpClimate(ClimateEntity):
         self._attr_name = definition.get("name")
         self._attr_unique_id = definition.get("unique_id")
 
-        # Tworzenie "ładnego" entity_id (bez polskich znaków)
+        # Create a "nice" entity_id (without Polish diacritics)
         slug = (
             f"sprsun_{self._model}_{self._attr_name}"
             .lower()
@@ -212,7 +212,7 @@ class HeatPumpClimate(ClimateEntity):
 
         if preset_mode not in self._preset_values:
             _LOGGER.warning(
-                "Nieznany preset_mode '%s' dla encji %s",
+                "Unknown preset_mode '%s' for entity %s",
                 preset_mode,
                 self.entity_id,
             )
@@ -221,7 +221,7 @@ class HeatPumpClimate(ClimateEntity):
         value = self._preset_values[preset_mode]
 
         _LOGGER.debug(
-            "Ustawiam preset_mode '%s' (wartość %s) w rejestrze %s dla %s",
+            "Setting preset_mode '%s' (value %s) in register %s for %s",
             preset_mode,
             value,
             self._preset_register,
@@ -311,17 +311,17 @@ class HeatPumpClimate(ClimateEntity):
     async def async_set_temperature(self, **kwargs):
         temp = kwargs.get("temperature")
         if temp is None or self._target_temp_register is None:
-            _LOGGER.debug("%s: Brak temperatury lub rejestru docelowego", self.entity_id)
+            _LOGGER.debug("%s: No temperature or target register", self.entity_id)
             return
 
         if self._disable_slider_when_off and self.hvac_mode == HVACMode.OFF:
-            _LOGGER.debug("%s: Ignoruję zapis temperatury – HVAC OFF", self.entity_id)
+            _LOGGER.debug("%s: Ignoring temperature write – HVAC OFF", self.entity_id)
             return
 
         value = int(temp / self._scale)
 
         _LOGGER.debug(
-            "%s: Próba zapisu temperatury %.1f°C (wartość raw=%s) do rejestru %s",
+            "%s: Attempting to write temperature %.1f°C (raw=%s) to register %s",
             self.entity_id,
             temp,
             value,
@@ -346,7 +346,7 @@ class HeatPumpClimate(ClimateEntity):
             new_temp = new_raw * self._scale
 
         _LOGGER.debug(
-            "%s: Po zapisie rejestr %s zwraca raw=%s (%.1f°C)",
+            "%s: After write register %s returned raw=%s (%.1f°C)",
             self.entity_id,
             self._target_temp_register,
             new_raw,
@@ -356,7 +356,7 @@ class HeatPumpClimate(ClimateEntity):
         # Ostrzeżenie, jeśli pompa nie przyjęła wartości
         if new_temp is not None and abs(new_temp - temp) > 0.1:
             _LOGGER.warning(
-                "%s: Pompa NIE przyjęła nowej temperatury! Ustawiono %.1f°C, ale odczytano %.1f°C",
+                "%s: Pump DID NOT accept the new temperature! Set %.1f°C but read %.1f°C",
                 self.entity_id,
                 temp,
                 new_temp,
@@ -407,7 +407,7 @@ class HeatPumpClimate(ClimateEntity):
 
         return {
             "identifiers": {(DOMAIN, self.coordinator.entry_id)},
-            "name": f"Pompa ciepła Sprsun {model_name}",
+            "name": f"Sprsun heat pump {model_name}",
             "manufacturer": "Sprsun",
             "model": model_name,
         }

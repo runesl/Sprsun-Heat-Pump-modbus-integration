@@ -30,7 +30,7 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
-    """Rejestracja buttonów dla danego modelu."""
+    """Register buttons for the model."""
     data = hass.data[DOMAIN][entry.entry_id]
     coordinator: SprsunCoordinator = data["coordinator"]
     model: str = data["model"]
@@ -45,7 +45,7 @@ async def async_setup_entry(
 
 
 class SprsunGenericButton(ButtonEntity):
-    """Button: zapis wartości 1 do rejestru Modbus."""
+    """Button: write value 1 to Modbus register."""
 
     _attr_should_poll = False
 
@@ -77,23 +77,23 @@ class SprsunGenericButton(ButtonEntity):
     def device_info(self):
         return {
             "identifiers": {(DOMAIN, self._entry_id)},
-            "name": f"Pompa ciepła Sprsun {self._model.upper().replace('_', '-')}",
+            "name": f"Sprsun heat pump {self._model.upper().replace('_', '-')}",
             "manufacturer": "Sprsun",
             "model": self._model.upper().replace('_', '-'),
         }
 
     async def async_press(self) -> None:
-        """Naciśnięcie przycisku = zapis 1 do rejestru."""
+        """Pressing the button = write 1 to the register."""
         try:
             await self.coordinator.client.write_register(self._register, 1)
             _LOGGER.info(
-                "BUTTON %s: zapisano 1 do rejestru %s",
+                "BUTTON %s: wrote 1 to register %s",
                 self._attr_name,
                 self._register,
             )
         except Exception as err:
             _LOGGER.error(
-                "Błąd zapisu button %s (reg %s): %s",
+                "Error writing button %s (reg %s): %s",
                 self._attr_name,
                 self._register,
                 err,

@@ -132,7 +132,7 @@ class SprsunSwitchEntity(SwitchEntity):
     def device_info(self):
         return {
             "identifiers": {(DOMAIN, self._entry_id)},
-            "name": f"Pompa ciepła Sprsun {self._model.upper().replace('_', '-')}",
+            "name": f"Sprsun heat pump {self._model.upper().replace('_', '-')}",
             "manufacturer": "Sprsun",
             "model": self._model.upper().replace('_', '-'),
         }

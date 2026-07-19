@@ -39,7 +39,7 @@ class HeatPumpModbusClient:
             raise ConnectionError("Cannot connect to Modbus heat pump")
 
     async def close(self):
-        """Pewne zamknięcie połączenia Modbus TCP."""
+        """Graceful close of Modbus TCP connection."""
         if self._client is None:
             return
 
@@ -58,7 +58,7 @@ class HeatPumpModbusClient:
                     await result
 
         except Exception as err:
-            _LOGGER.warning("Błąd przy zamykaniu Modbus TCP: %s", err)
+            _LOGGER.warning("Error closing Modbus TCP: %s", err)
 
         finally:
             self._client = None
@@ -116,7 +116,7 @@ class HeatPumpModbusClient:
             return rr.bits
 
     async def write_register(self, address: int, value: int):
-        """FC6 – zapis jednego rejestru holding."""
+        """FC6 – write single holding register."""
         async with self._lock:
             if self._client is None or not getattr(self._client, "connected", False):
                 await self.connect()
@@ -172,7 +172,7 @@ class HeatPumpModbusClient:
             return True
 
     async def read_coils(self, address: int, count: int = 1) -> list[bool] | None:
-        """FC1 – odczyt cewek (coils)."""
+        """FC1 – read coils."""
         async with self._lock:
             if self._client is None or not getattr(self._client, "connected", False):
                 await self.connect()
@@ -191,5 +191,5 @@ class HeatPumpModbusClient:
                 _LOGGER.error("Invalid Modbus coils response at %s: %s", address, rr)
                 return None
 
-            return rr.bits[:count]   # zwróć listę bool
+            return rr.bits[:count]   # return list of bools
 

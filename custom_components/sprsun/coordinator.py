@@ -13,7 +13,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class SprsunCoordinator(DataUpdateCoordinator):
-    """Koordynator odczytów Modbus dla pomp SPRSUN."""
+    """Modbus read coordinator for SPRSUN pumps."""
 
     def __init__(
         self,
@@ -50,7 +50,7 @@ class SprsunCoordinator(DataUpdateCoordinator):
         )
 
     async def _async_update_data(self) -> dict[int, int]:
-        """Główny cykl odczytu danych z Modbus."""
+        """Main Modbus data read cycle."""
         try:
             new_data: dict[int, int] = {}
 
@@ -65,7 +65,7 @@ class SprsunCoordinator(DataUpdateCoordinator):
                 regs = await self.client.read_holding_registers(start, count)
                 if regs is None:
                     raise UpdateFailed(
-                        f"Brak danych z read_holding_registers dla bloku {start}"
+                        f"No data from read_holding_registers for block {start}"
                     )
                 for offset, raw_value in enumerate(regs):
                     reg = start + offset
@@ -89,7 +89,7 @@ class SprsunCoordinator(DataUpdateCoordinator):
                 self.data_coils = {idx: coil_bits[idx] for idx in range(len(coil_bits))}
 
             except Exception as err:
-                _LOGGER.warning("Błąd odczytu coils: %s", err)
+                _LOGGER.warning("Error reading coils: %s", err)
                 self.data_coils = {}
 
             # -------------------------
@@ -109,14 +109,14 @@ class SprsunCoordinator(DataUpdateCoordinator):
                 self.data_discrete = [[b] for b in bits]
 
             except Exception as err:
-                _LOGGER.warning("Błąd odczytu discrete inputs: %s", err)
+                _LOGGER.warning("Error reading discrete inputs: %s", err)
                 self.data_discrete = None
 
-            # zapisz nowe holdingi do self.data
+            # save new holdings to self.data
             self.data = new_data
             self.async_set_updated_data(self.data)
             return self.data
 
         except Exception as err:
-            _LOGGER.error("Błąd aktualizacji danych z Modbus: %s", err)
+            _LOGGER.error("Error updating data from Modbus: %s", err)
             raise UpdateFailed(err) from err

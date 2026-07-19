@@ -30,7 +30,7 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
-    """Rejestracja binary sensorów dla danego modelu."""
+    """Register binary sensors for the model."""
     data = hass.data[DOMAIN][entry.entry_id]
     coordinator: SprsunCoordinator = data["coordinator"]
     model: str = data["model"]
@@ -56,11 +56,11 @@ async def async_setup_entry(
         alarm_sensor = alarm_class(coordinator, entry.entry_id, model)
         async_add_entities([alarm_sensor])
     except Exception as err:
-        _LOGGER.error("Nie udało się załadować sensora alarmów: %s", err)
+        _LOGGER.error("Failed to load alarm sensor: %s", err)
 
 
 class SprsunBinarySensor(BinarySensorEntity):
-    """Binary sensor oparty o koordynator i discrete inputs."""
+    """Binary sensor based on coordinator and discrete inputs."""
 
     _attr_should_poll = False
 
@@ -135,7 +135,7 @@ class SprsunBinarySensor(BinarySensorEntity):
             return None
 
         value = 1 if self.is_on else 0
-        return {"description": self._mapping.get(value, "Nieznany")}
+        return {        "description": self._mapping.get(value, "Unknown")}
 
     # ---------------------------------------------------------
     # DEVICE INFO
@@ -145,7 +145,7 @@ class SprsunBinarySensor(BinarySensorEntity):
     def device_info(self):
         return {
             "identifiers": {(DOMAIN, self._entry_id)},
-            "name": f"Pompa ciepła Sprsun {self._model.upper().replace('_', '-')}",
+            "name": f"Sprsun heat pump {self._model.upper().replace('_', '-')}",
             "manufacturer": "Sprsun",
             "model": self._model.upper().replace('_', '-'),
         }

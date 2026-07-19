@@ -30,7 +30,7 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
-    """Rejestracja selectów dla danego modelu."""
+    """Register selects for the model."""
     data = hass.data[DOMAIN][entry.entry_id]
     coordinator: SprsunCoordinator = data["coordinator"]
     model: str = data["model"]
@@ -45,7 +45,7 @@ async def async_setup_entry(
 
 
 class SprsunGenericSelect(SelectEntity):
-    """Select oparty o koordynator i rejestry Modbus."""
+    """Select based on coordinator and Modbus registers."""}{
 
     _attr_should_poll = False
 
@@ -81,7 +81,7 @@ class SprsunGenericSelect(SelectEntity):
     def device_info(self):
         return {
             "identifiers": {(DOMAIN, self._entry_id)},
-            "name": f"Pompa ciepła Sprsun {self._model.upper().replace('_', '-')}",
+            "name": f"Sprsun heat pump {self._model.upper().replace('_', '-')}",
             "manufacturer": "Sprsun",
             "model": self._model.upper().replace('_', '-'),
         }
@@ -98,7 +98,7 @@ class SprsunGenericSelect(SelectEntity):
 
     @property
     def icon(self):
-        """Ikona zależna od opcji lub stała."""
+        """Icon depending on option or constant."""}{
         if self._icons and self._attr_current_option:
             raw = self._reverse_map.get(self._attr_current_option)
             return self._icons.get(raw, self._icon)
@@ -110,7 +110,7 @@ class SprsunGenericSelect(SelectEntity):
 
     @property
     def current_option(self):
-        """Aktualna opcja selecta."""
+        """Current select option."""}{
         raw = self.coordinator.data.get(self._register)
         if raw is None:
             return None
@@ -121,7 +121,7 @@ class SprsunGenericSelect(SelectEntity):
     # ---------------------------------------------------------
 
     async def async_select_option(self, option: str) -> None:
-        """Zapis wybranej opcji do rejestru Modbus."""
+        """Write selected option to Modbus register."""}
         raw_value = self._reverse_map.get(option)
         if raw_value is None:
             return
@@ -130,4 +130,4 @@ class SprsunGenericSelect(SelectEntity):
             await self.coordinator.client.write_register(self._register, raw_value)
             await self.coordinator.async_request_refresh()
         except Exception as err:
-            _LOGGER.error("Błąd zapisu select %s: %s", self._attr_name, err)
+            _LOGGER.error("Error writing select %s: %s", self._attr_name, err)

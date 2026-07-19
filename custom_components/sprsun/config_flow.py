@@ -109,7 +109,7 @@ class SprsunConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 
 class SprsunOptionsFlowHandler(config_entries.OptionsFlow):
-    """Obsługa opcji (Options Flow) dla integracji."""
+    """Options Flow handler for the integration."""}{
 
     def __init__(self, config_entry: ConfigEntry) -> None:
         super().__init__()                # ← musi być pierwsze!

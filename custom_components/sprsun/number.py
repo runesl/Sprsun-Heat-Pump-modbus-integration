@@ -42,7 +42,7 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
-    """Rejestracja encji number dla danego modelu."""
+    """Register number entities for the model."""
     data = hass.data[DOMAIN][entry.entry_id]
     coordinator: SprsunCoordinator = data["coordinator"]
     model: str = data["model"]
@@ -71,7 +71,7 @@ async def async_setup_entry(
 
 
 class SprsunNumberEntity(NumberEntity):
-    """Encja number oparta o koordynator i rejestry Modbus."""
+    """Number entity based on coordinator and Modbus registers."""
 
     _attr_should_poll = False
 
@@ -127,7 +127,7 @@ class SprsunNumberEntity(NumberEntity):
             await self.coordinator.client.write_register(self._register, int(value))
             await self.coordinator.async_request_refresh()
         except Exception as err:  # pylint: disable=broad-except
-            _LOGGER.error("Błąd zapisu number %s: %s", self._attr_name, err)
+            _LOGGER.error("Error writing number %s: %s", self._attr_name, err)
 
     @property
     def device_info(self):
@@ -145,7 +145,7 @@ class SprsunNumberEntity(NumberEntity):
 
 
 class SprsunCounterNumberEntity(NumberEntity, RestoreEntity):
-    """Licznik logiczny oparty o istniejące sensory HA."""
+    """Logical counter based on existing HA sensors."""}{
 
     _attr_should_poll = False
     _attr_native_min_value = 0
@@ -207,7 +207,7 @@ class SprsunCounterNumberEntity(NumberEntity, RestoreEntity):
             self._attr_state_class = None
 
     async def async_added_to_hass(self) -> None:
-        """Przywróć stan i podłącz subskrypcje."""
+        """Restore state and attach subscriptions."""
         await super().async_added_to_hass()
 
         # Przywrócenie ostatniego stanu
@@ -274,7 +274,7 @@ class SprsunCounterNumberEntity(NumberEntity, RestoreEntity):
     # -----------------------------------------------------
 
     async def _handle_reset_time_event(self, now: datetime) -> None:
-        """Wywoływane codziennie o północy – na tej podstawie robimy reset."""
+        """Called daily at midnight — used for resetting."""
         if self._reset == "daily":
             # reset codziennie o północy
             self._value = 0
@@ -300,7 +300,7 @@ class SprsunCounterNumberEntity(NumberEntity, RestoreEntity):
     # -----------------------------------------------------
 
     async def _handle_state_change(self, event) -> None:
-        """Zliczanie przejść OFF → ON dla pojedynczego sensora."""
+        """Counting OFF → ON transitions for a single sensor."""
         new = event.data.get("new_state")
         old = event.data.get("old_state")
 
@@ -318,10 +318,10 @@ class SprsunCounterNumberEntity(NumberEntity, RestoreEntity):
 
     async def _handle_defrost_state_change(self, event) -> None:
         """
-        Detekcja defrostu:
-        - Defrost trwa, gdy sprężarka == on i wentylator == off
-        - Jeden pełny cykl: wejście w stan (on/off) i późniejszy powrót
-          do jakiegokolwiek innego stanu.
+        Defrost detection:
+        - Defrost is active when compressor == on and fan == off
+        - A full defrost cycle: entering the (on/off) state and later returning
+          to any other state.
         """
         now = datetime.now()
 

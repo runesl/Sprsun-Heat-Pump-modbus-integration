@@ -76,7 +76,7 @@ async def async_setup_entry(
 
     sensors_def = MODEL_SENSORS_MAP.get(model)
     if sensors_def is None:
-        _LOGGER.error("Brak sensorów dla modelu %s", model)
+        _LOGGER.error("No sensors for model %s", model)
         return
 
     entities: list[SensorEntity] = []
@@ -96,34 +96,34 @@ async def async_setup_entry(
     logic = MODEL_LOGIC_MAP[model]
 
     entities.extend([
-        logic["CompressorRuntime"]("Czas pracy sprężarki daily",
-                                   f"{DOMAIN}_{model}_czas_pracy_sprezarki_daily",
+        logic["CompressorRuntime"]("Compressor run time daily",
+                                   f"{DOMAIN}_{model}_compressor_run_time_daily",
                                    "daily", entry.entry_id, model),
-        logic["CompressorRuntime"]("Czas pracy sprężarki monthly",
-                                   f"{DOMAIN}_{model}_czas_pracy_sprezarki_monthly",
+        logic["CompressorRuntime"]("Compressor run time monthly",
+                                   f"{DOMAIN}_{model}_compressor_run_time_monthly",
                                    "monthly", entry.entry_id, model),
-        logic["CompressorRuntime"]("Czas pracy sprężarki yearly",
-                                   f"{DOMAIN}_{model}_czas_pracy_sprezarki_yearly",
+        logic["CompressorRuntime"]("Compressor run time yearly",
+                                   f"{DOMAIN}_{model}_compressor_run_time_yearly",
                                    "yearly", entry.entry_id, model),
-        logic["CompressorRuntime"]("Czas pracy sprężarki total",
-                                   f"{DOMAIN}_{model}_czas_pracy_sprezarki_total",
+        logic["CompressorRuntime"]("Compressor run time total",
+                                   f"{DOMAIN}_{model}_compressor_run_time_total",
                                    "total", entry.entry_id, model),
 
-        logic["FanRuntime"]("Czas pracy wentylatora daily",
-                            f"{DOMAIN}_{model}_czas_pracy_wentylatora_daily",
+        logic["FanRuntime"]("Fan run time daily",
+                            f"{DOMAIN}_{model}_fan_run_time_daily",
                             "daily", entry.entry_id, model),
-        logic["FanRuntime"]("Czas pracy wentylatora monthly",
-                            f"{DOMAIN}_{model}_czas_pracy_wentylatora_monthly",
+        logic["FanRuntime"]("Fan run time monthly",
+                            f"{DOMAIN}_{model}_fan_run_time_monthly",
                             "monthly", entry.entry_id, model),
-        logic["FanRuntime"]("Czas pracy wentylatora yearly",
-                            f"{DOMAIN}_{model}_czas_pracy_wentylatora_yearly",
+        logic["FanRuntime"]("Fan run time yearly",
+                            f"{DOMAIN}_{model}_fan_run_time_yearly",
                             "yearly", entry.entry_id, model),
-        logic["FanRuntime"]("Czas pracy wentylatora total",
-                            f"{DOMAIN}_{model}_czas_pracy_wentylatora_total",
+        logic["FanRuntime"]("Fan run time total",
+                            f"{DOMAIN}_{model}_fan_run_time_total",
                             "total", entry.entry_id, model),
 
-        logic["OwnershipDays"]("Czas posiadania pompy",
-                               f"{DOMAIN}_{model}_czas_posiadania_pompy",
+        logic["OwnershipDays"]("Pump ownership days",
+                               f"{DOMAIN}_{model}_pump_ownership_days",
                                entry.entry_id, model),
     ])
 
