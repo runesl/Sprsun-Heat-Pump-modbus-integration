@@ -1,6 +1,6 @@
 ENTITIES =[
 {
-"name":"Kompressorhastighed w trybie nocnym",
+"name":"Kompressorhastighed i nattilstand",
 "register":263 ,
 "min":0 ,
 "max":80 ,
@@ -8,7 +8,7 @@ ENTITIES =[
 "icon":"mdi:bag-personal",
 },
 {
-"name":"Ventilatorhastighed w trybie nocnym",
+"name":"Ventilatorhastighed i nattilstand",
 "register":264 ,
 "min":0 ,
 "max":1000 ,
@@ -16,7 +16,7 @@ ENTITIES =[
 "icon":"mdi:fan",
 },
 {
-"name":"Tidsfunktion rok",
+"name":"Tidsfunktion år",
 "register":182 ,
 "min":0 ,
 "max":99 ,
@@ -25,7 +25,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion miesiąc",
+"name":"Tidsfunktion måned",
 "register":183 ,
 "min":0 ,
 "max":12 ,
@@ -34,7 +34,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion dzień",
+"name":"Tidsfunktion dag",
 "register":184 ,
 "min":0 ,
 "max":31 ,
@@ -43,7 +43,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion godzina",
+"name":"Tidsfunktion time",
 "register":185 ,
 "min":0 ,
 "max":23 ,
@@ -52,7 +52,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion minuta",
+"name":"Tidsfunktion minut",
 "register":186 ,
 "min":0 ,
 "max":59 ,
@@ -61,7 +61,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion dzień tygodnia",
+"name":"Tidsfunktion dag tygodnia",
 "register":187 ,
 "min":0 ,
 "max":7 ,
@@ -70,7 +70,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion poniedziałek godzina włączenia",
+"name":"Tidsfunktion mandag time start",
 "register":218 ,
 "min":0 ,
 "max":23 ,
@@ -79,7 +79,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion poniedziałek minuta włączenia",
+"name":"Tidsfunktion mandag minut start",
 "register":219 ,
 "min":0 ,
 "max":59 ,
@@ -88,7 +88,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion poniedziałek godzina wyłączenia",
+"name":"Tidsfunktion mandag time stop",
 "register":232 ,
 "min":0 ,
 "max":23 ,
@@ -97,7 +97,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion poniedziałek minuta wyłączenia",
+"name":"Tidsfunktion mandag minut stop",
 "register":233 ,
 "min":0 ,
 "max":59 ,
@@ -106,7 +106,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion wtorek godzina włączenia",
+"name":"Tidsfunktion tirsdag time start",
 "register":220 ,
 "min":0 ,
 "max":23 ,
@@ -115,7 +115,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion wtorek minuta włączenia",
+"name":"Tidsfunktion tirsdag minut start",
 "register":221 ,
 "min":0 ,
 "max":59 ,
@@ -124,7 +124,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion wtorek godzina wyłączenia",
+"name":"Tidsfunktion tirsdag time stop",
 "register":234 ,
 "min":0 ,
 "max":23 ,
@@ -133,7 +133,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion wtorek minuta wyłączenia",
+"name":"Tidsfunktion tirsdag minut stop",
 "register":235 ,
 "min":0 ,
 "max":59 ,
@@ -142,7 +142,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion sOnsdag godzina wlaczenia",
+"name":"Tidsfunktion onsdag time start",
 "register":222 ,
 "min":0 ,
 "max":23 ,
@@ -151,7 +151,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion sOnsdag minuta wlaczenia",
+"name":"Tidsfunktion onsdag minut start",
 "register":223 ,
 "min":0 ,
 "max":59 ,
@@ -160,7 +160,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion sOnsdag godzina wylaczenia",
+"name":"Tidsfunktion onsdag time stop",
 "register":236 ,
 "min":0 ,
 "max":23 ,
@@ -169,7 +169,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion sOnsdag minuta wylaczenia",
+"name":"Tidsfunktion onsdag minut stop",
 "register":237 ,
 "min":0 ,
 "max":59 ,
@@ -178,7 +178,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion czwartek godzina wlączenia",
+"name":"Tidsfunktion torsdag time start",
 "register":224 ,
 "min":0 ,
 "max":23 ,
@@ -187,7 +187,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion czwartek minuta wlączenia",
+"name":"Tidsfunktion torsdag minut start",
 "register":225 ,
 "min":0 ,
 "max":59 ,
@@ -196,7 +196,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion czwartek godzina wyłączenia",
+"name":"Tidsfunktion torsdag time stop",
 "register":238 ,
 "min":0 ,
 "max":23 ,
@@ -205,7 +205,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion czwartek minuta wyłączenia",
+"name":"Tidsfunktion torsdag minut stop",
 "register":239 ,
 "min":0 ,
 "max":59 ,
@@ -214,7 +214,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion piątek godzina włączenia",
+"name":"Tidsfunktion fredag time start",
 "register":226 ,
 "min":0 ,
 "max":23 ,
@@ -223,7 +223,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion piątek minuta włączenia",
+"name":"Tidsfunktion fredag minut start",
 "register":227 ,
 "min":0 ,
 "max":59 ,
@@ -232,7 +232,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion piątek godzina wyłączenia",
+"name":"Tidsfunktion fredag time stop",
 "register":240 ,
 "min":0 ,
 "max":23 ,
@@ -241,7 +241,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion piątek minuta wyłączenia",
+"name":"Tidsfunktion fredag minut stop",
 "register":241 ,
 "min":0 ,
 "max":59 ,
@@ -250,7 +250,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion sobota godzina włączenia",
+"name":"Tidsfunktion lørdag time start",
 "register":228 ,
 "min":0 ,
 "max":23 ,
@@ -259,7 +259,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion sobota minuta włączenia",
+"name":"Tidsfunktion lørdag minut start",
 "register":229 ,
 "min":0 ,
 "max":59 ,
@@ -268,7 +268,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion sobota godzina wyłączenia",
+"name":"Tidsfunktion lørdag time stop",
 "register":242 ,
 "min":0 ,
 "max":23 ,
@@ -277,7 +277,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion sobota minuta wyłączenia",
+"name":"Tidsfunktion lørdag minut stop",
 "register":243 ,
 "min":0 ,
 "max":59 ,
@@ -286,7 +286,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion niedziela godzina włączenia",
+"name":"Tidsfunktion søndag time start",
 "register":230 ,
 "min":0 ,
 "max":23 ,
@@ -295,7 +295,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion niedziela minuta włączenia",
+"name":"Tidsfunktion søndag minut start",
 "register":231 ,
 "min":0 ,
 "max":59 ,
@@ -304,7 +304,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion niedziela godzina wyłączenia",
+"name":"Tidsfunktion søndag time stop",
 "register":244 ,
 "min":0 ,
 "max":23 ,
@@ -313,7 +313,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion niedziela minuta wyłączenia",
+"name":"Tidsfunktion søndag minut stop",
 "register":245 ,
 "min":0 ,
 "max":59 ,
@@ -322,7 +322,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion godź X1",
+"name":"Tidsfunktion time X1",
 "register":246 ,
 "min":0 ,
 "max":23 ,
@@ -340,7 +340,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion godź X2",
+"name":"Tidsfunktion time X2",
 "register":250 ,
 "min":0 ,
 "max":95 ,
@@ -358,7 +358,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion godź X3",
+"name":"Tidsfunktion time X3",
 "register":254 ,
 "min":0 ,
 "max":167 ,
@@ -376,7 +376,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion godź X4",
+"name":"Tidsfunktion time X4",
 "register":258 ,
 "min":0 ,
 "max":259 ,
@@ -412,7 +412,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Adressese",
+"name":"Adresse",
 "register":74 ,
 "min":1 ,
 "max":207 ,
@@ -606,7 +606,7 @@ ENTITIES =[
 "icon":"mdi:bag-personal",
 },
 {
-"name":"Kompressorhastighed temperatur zewnętrzna<=26",
+"name":"Kompressorhastighed udendørstemperatur<=26",
 "register":275 ,
 "min":0 ,
 "max":80 ,
@@ -685,7 +685,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Afrimning temperatur zewnętrzna dla uruchomienia odszraniania",
+"name":"Udendørstemperatur for start af afrimning",
 "register":85 ,
 "min":-30 ,
 "max":30 ,
@@ -712,7 +712,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Afrimning minimalny czas",
+"name":"Afrimning minimumstid",
 "register":88 ,
 "min":1 ,
 "max":99 ,
@@ -721,7 +721,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Afrimning maksymalny czas",
+"name":"Afrimning maksimumstid",
 "register":89 ,
 "min":1 ,
 "max":99 ,
@@ -730,7 +730,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Afrimning interwał odszraniania",
+"name":"Afrimningsinterval",
 "register":90 ,
 "min":0 ,
 "max":490 ,
@@ -739,7 +739,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Afrimning wymuszone odszranianie co",
+"name":"Tvungen afrimning hver",
 "register":91 ,
 "min":0 ,
 "max":999 ,

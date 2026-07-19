@@ -2,7 +2,7 @@
 from __future__ import annotations 
 ENTITIES =[
 {
-"name":"Opvarmning temperatur zadana",
+"name":"Opvarmning ønsket temperatur",
 "unique_id":"ogrzewanie_temperatur_zadana",
 # Ścieżka pliku modelowego (używana np. w device_info)
 "model_path":__file__ ,
@@ -43,7 +43,7 @@ ENTITIES =[
 },
 },
 {
-"name":"Køling temperatur zadana",
+"name":"Køling ønsket temperatur",
 "unique_id":"chlodzenie_temperatur_zadana",
 # Ścieżka pliku modelowego (używana np. w device_info)
 "model_path":__file__ ,
@@ -78,7 +78,7 @@ ENTITIES =[
 },
 
 {
-"name":"Varmtvand temperatur zadana",
+"name":"Varmtvand ønsket temperatur",
 "unique_id":"cwu_temperatur_zadana",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -183,7 +183,7 @@ ENTITIES =[
 "icon_off":"mdi:radiator-off",
 },
 {
-"name":"Varmtvand histereza start",
+"name":"Varmtvand hysterese start",
 "unique_id":"cwu_histereza_start",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -217,7 +217,7 @@ ENTITIES =[
 
 },
 {
-"name":"Varmtvand histereza stop",
+"name":"Varmtvand hysterese stop",
 "unique_id":"cwu_histereza_stop",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -250,7 +250,7 @@ ENTITIES =[
 "icon_off":"mdi:bathtub-outline",
 },
 {
-"name":"Køling temperatur zewnętrzna X1",
+"name":"Køling udendørstemperatur X1",
 "unique_id":"chlodzenie_temperatur_zewnetrzna_x1",
 "model_path":__file__ ,
 "data_type":"int16",
@@ -283,7 +283,7 @@ ENTITIES =[
 "icon_off":"mdi:snowflake-off",
 },
 {
-"name":"Køling temperatur zewnętrzna X2",
+"name":"Køling udendørstemperatur X2",
 "unique_id":"chlodzenie_temperatur_zewnetrzna_x2",
 "model_path":__file__ ,
 "data_type":"int16",
@@ -316,7 +316,7 @@ ENTITIES =[
 "icon_off":"mdi:snowflake-off",
 },
 {
-"name":"Køling temperatur zewnętrzna X3",
+"name":"Køling udendørstemperatur X3",
 "unique_id":"chlodzenie_temperatur_zewnetrzna_x3",
 "model_path":__file__ ,
 "data_type":"int16",
@@ -349,7 +349,7 @@ ENTITIES =[
 "icon_off":"mdi:snowflake-off",
 },
 {
-"name":"Køling temperatur zewnętrzna X4",
+"name":"Køling udendørstemperatur X4",
 "unique_id":"chlodzenie_temperatur_zewnetrzna_x4",
 "model_path":__file__ ,
 "data_type":"int16",
@@ -382,7 +382,7 @@ ENTITIES =[
 "icon_off":"mdi:snowflake-off",
 },
 {
-"name":"Køling temperatur zasilania Y1",
+"name":"Køling fremløbstemperatur Y1",
 "unique_id":"chlodzenie_temperatur_zasilania_y1",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -415,7 +415,7 @@ ENTITIES =[
 "icon_off":"mdi:snowflake-off",
 },
 {
-"name":"Køling temperatur zasilania Y2",
+"name":"Køling fremløbstemperatur Y2",
 "unique_id":"chlodzenie_temperatur_zasilania_y2",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -448,7 +448,7 @@ ENTITIES =[
 "icon_off":"mdi:snowflake-off",
 },
 {
-"name":"Køling temperatur zasilania Y3",
+"name":"Køling fremløbstemperatur Y3",
 "unique_id":"chlodzenie_temperatur_zasilania_y3",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -481,7 +481,7 @@ ENTITIES =[
 "icon_off":"mdi:snowflake-off",
 },
 {
-"name":"Køling temperatur zasilania Y4",
+"name":"Køling fremløbstemperatur Y4",
 "unique_id":"chlodzenie_temperatur_zasilania_y4",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -514,7 +514,7 @@ ENTITIES =[
 "icon_off":"mdi:snowflake-off",
 },
 {
-"name":"Opvarmning temperatur zewnętrzna X1",
+"name":"Opvarmning udendørstemperatur X1",
 "unique_id":"ogrzewanie_temperatur_zewnetrzna_x1",
 "model_path":__file__ ,
 "data_type":"int16",
@@ -547,7 +547,7 @@ ENTITIES =[
 "icon_off":"mdi:radiator-off",
 },
 {
-"name":"Opvarmning temperatur zewnętrzna X2",
+"name":"Opvarmning udendørstemperatur X2",
 "unique_id":"ogrzewanie_temperatur_zewnetrzna_x2",
 "model_path":__file__ ,
 "data_type":"int16",
@@ -580,7 +580,7 @@ ENTITIES =[
 "icon_off":"mdi:radiator-off",
 },
 {
-"name":"Opvarmning temperatur zewnętrzna X3",
+"name":"Opvarmning udendørstemperatur X3",
 "unique_id":"ogrzewanie_temperatur_zewnetrzna_x3",
 "model_path":__file__ ,
 "data_type":"int16",
@@ -613,7 +613,7 @@ ENTITIES =[
 "icon_off":"mdi:radiator-off",
 },
 {
-"name":"Opvarmning temperatur zewnętrzna X4",
+"name":"Opvarmning udendørstemperatur X4",
 "unique_id":"ogrzewanie_temperatur_zewnetrzna_4",
 "model_path":__file__ ,
 "data_type":"int16",
@@ -646,7 +646,7 @@ ENTITIES =[
 "icon_off":"mdi:radiator-off",
 },
 {
-"name":"Opvarmning temperatur zasilania Y1",
+"name":"Opvarmning fremløbstemperatur Y1",
 "unique_id":"ogrzewanie_temperatur_zasilania_y1",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -679,7 +679,7 @@ ENTITIES =[
 "icon_off":"mdi:radiator-off",
 },
 {
-"name":"Opvarmning temperatur zasilania Y2",
+"name":"Opvarmning fremløbstemperatur Y2",
 "unique_id":"ogrzewanie_temperatur_zasilania_y2",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -712,7 +712,7 @@ ENTITIES =[
 "icon_off":"mdi:radiator-off",
 },
 {
-"name":"Opvarmning temperatur zasilania Y3",
+"name":"Opvarmning fremløbstemperatur Y3",
 "unique_id":"ogrzewanie_temperatur_zasilania_y3",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -745,7 +745,7 @@ ENTITIES =[
 "icon_off":"mdi:radiator-off",
 },
 {
-"name":"Opvarmning temperatur zasilania Y4",
+"name":"Opvarmning fremløbstemperatur Y4",
 "unique_id":"ogrzewanie_temperatur_zasilania_y4",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -778,7 +778,7 @@ ENTITIES =[
 "icon_off":"mdi:radiator-off",
 },
 {
-"name":"Varmtvand temperatur zewnętrzna X1",
+"name":"Varmtvand udendørstemperatur X1",
 "unique_id":"cwu_temperatur_zewnetrzna_x1",
 "model_path":__file__ ,
 "data_type":"int16",
@@ -811,7 +811,7 @@ ENTITIES =[
 "icon_off":"mdi:bathtub-outline",
 },
 {
-"name":"Varmtvand temperatur zewnętrzna X2",
+"name":"Varmtvand udendørstemperatur X2",
 "unique_id":"cwu_temperatur_zewnetrzna_x2",
 "model_path":__file__ ,
 "data_type":"int16",
@@ -844,7 +844,7 @@ ENTITIES =[
 "icon_off":"mdi:bathtub-outline",
 },
 {
-"name":"Varmtvand temperatur zewnętrzna X3",
+"name":"Varmtvand udendørstemperatur X3",
 "unique_id":"cwu_temperatur_zewnetrzna_x3",
 "model_path":__file__ ,
 "data_type":"int16",
@@ -877,7 +877,7 @@ ENTITIES =[
 "icon_off":"mdi:bathtub-outline",
 },
 {
-"name":"Varmtvand temperatur zewnętrzna X4",
+"name":"Varmtvand udendørstemperatur X4",
 "unique_id":"cwu_temperatur_zewnetrzna_x4",
 "model_path":__file__ ,
 "data_type":"int16",
@@ -910,7 +910,7 @@ ENTITIES =[
 "icon_off":"mdi:bathtub-outline",
 },
 {
-"name":"Varmtvand temperatur zasilania Y1",
+"name":"Varmtvand fremløbstemperatur Y1",
 "unique_id":"cwu_temperatur_zasilania_y1",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -943,7 +943,7 @@ ENTITIES =[
 "icon_off":"mdi:bathtub-outline",
 },
 {
-"name":"Varmtvand temperatur zasilania Y2",
+"name":"Varmtvand fremløbstemperatur Y2",
 "unique_id":"cwu_temperatur_zasilania_y2",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -976,7 +976,7 @@ ENTITIES =[
 "icon_off":"mdi:bathtub-outline",
 },
 {
-"name":"Varmtvand temperatur zasilania Y3",
+"name":"Varmtvand fremløbstemperatur Y3",
 "unique_id":"cwu_temperatur_zasilania_y3",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -1009,7 +1009,7 @@ ENTITIES =[
 "icon_off":"mdi:bathtub-outline",
 },
 {
-"name":"Varmtvand temperatur zasilania Y4",
+"name":"Varmtvand fremløbstemperatur Y4",
 "unique_id":"cwu_temperatur_zasilania_y4",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -1042,7 +1042,7 @@ ENTITIES =[
 "icon_off":"mdi:bathtub-outline",
 },
 {
-"name":"Tidsfunktion temperatur chłodzenia X1",
+"name":"Tidsfunktion køletemperatur X1",
 "unique_id":"funkcja_czasowa_temperatur_chlodzenia_x1",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -1075,7 +1075,7 @@ ENTITIES =[
 "icon_off":"mdi:snowflake-off",
 },
 {
-"name":"Tidsfunktion temperatur ogrzewania X1",
+"name":"Tidsfunktion opvarmningstemperatur X1",
 "unique_id":"funkcja_czasowa_temperatur_ogrzewania_x1",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -1108,7 +1108,7 @@ ENTITIES =[
 "icon_off":"mdi:radiator-off",
 },
 {
-"name":"Tidsfunktion temperatur chłodzenia X2",
+"name":"Tidsfunktion køletemperatur X2",
 "unique_id":"funkcja_czasowa_temperatur_chlodzenia_x2",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -1141,7 +1141,7 @@ ENTITIES =[
 "icon_off":"mdi:snowflake-off",
 },
 {
-"name":"Tidsfunktion temperatur ogrzewania X2",
+"name":"Tidsfunktion opvarmningstemperatur X2",
 "unique_id":"funkcja_czasowa_temperatur_ogrzewania_x2",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -1174,7 +1174,7 @@ ENTITIES =[
 "icon_off":"mdi:radiator-off",
 },
 {
-"name":"Tidsfunktion temperatur chłodzenia X3",
+"name":"Tidsfunktion køletemperatur X3",
 "unique_id":"funkcja_czasowa_temperatur_chlodzenia_x3",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -1207,7 +1207,7 @@ ENTITIES =[
 "icon_off":"mdi:snowflake-off",
 },
 {
-"name":"Tidsfunktion temperatur ogrzewania X3",
+"name":"Tidsfunktion opvarmningstemperatur X3",
 "unique_id":"funkcja_czasowa_temperatur_ogrzewania_x3",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -1240,7 +1240,7 @@ ENTITIES =[
 "icon_off":"mdi:radiator-off",
 },
 {
-"name":"Tidsfunktion temperatur chłodzenia X4",
+"name":"Tidsfunktion køletemperatur X4",
 "unique_id":"funkcja_czasowa_temperatur_chlodzenia_x4",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -1273,7 +1273,7 @@ ENTITIES =[
 "icon_off":"mdi:snowflake-off",
 },
 {
-"name":"Tidsfunktion temperatur ogrzewania X4",
+"name":"Tidsfunktion opvarmningstemperatur X4",
 "unique_id":"funkcja_czasowa_temperatur_ogrzewania_x4",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -1306,7 +1306,7 @@ ENTITIES =[
 "icon_off":"mdi:radiator-off",
 },
 {
-"name":"Temperatur załączenia grzałki",
+"name":"Temperatur for aktivering af varmelegeme",
 "unique_id":"temperatur_zalaczenia_grzalki",
 "model_path":__file__ ,
 "data_type":"int16",
