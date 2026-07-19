@@ -71,6 +71,7 @@ class SprsunConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     selector.NumberSelectorConfig(
                         min=1,
                         max=65535,
+                        step=1,
                         mode=selector.NumberSelectorMode.BOX,
                     )
                 ),
@@ -78,12 +79,14 @@ class SprsunConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     selector.NumberSelectorConfig(
                         min=1,
                         max=255,
+                        step=1,
                         mode=selector.NumberSelectorMode.BOX,
                     )
                 ),
                 vol.Required(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): selector.NumberSelector(
                     selector.NumberSelectorConfig(
                         min=5,
+                        step=1,
                         mode=selector.NumberSelectorMode.BOX,
                     )
                 ),
@@ -144,6 +147,7 @@ class SprsunOptionsFlowHandler(config_entries.OptionsFlow):
                 vol.Required(CONF_SCAN_INTERVAL, default=scan_interval): selector.NumberSelector(
                     selector.NumberSelectorConfig(
                         min=5,
+                        step=1,
                         mode=selector.NumberSelectorMode.BOX,
                     )
                 ),
