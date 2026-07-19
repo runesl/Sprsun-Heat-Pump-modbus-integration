@@ -58,7 +58,7 @@ ENTITIES =[
 },
 },
 {
-"name":"Defrost funktion",
+"name":"Afrimning funktion",
 "address":36 ,
 "command_on":1 ,
 "command_off":0 ,
@@ -118,7 +118,7 @@ ENTITIES =[
 },
 },
 {
-"name":"Tryb Varmtvand",
+"name":"Tilstand Varmtvand",
 "address":42 ,
 "command_on":1 ,
 "command_off":0 ,

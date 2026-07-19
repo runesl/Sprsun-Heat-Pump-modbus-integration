@@ -1,6 +1,6 @@
 ENTITIES =[
 {
-"name":"Prędkość sprężarki w trybie nocnym",
+"name":"Kompressorhastighed w trybie nocnym",
 "register":263 ,
 "min":0 ,
 "max":80 ,
@@ -8,7 +8,7 @@ ENTITIES =[
 "icon":"mdi:bag-personal",
 },
 {
-"name":"Prędkość wentylatora w trybie nocnym",
+"name":"Ventilatorhastighed w trybie nocnym",
 "register":264 ,
 "min":0 ,
 "max":1000 ,
@@ -142,7 +142,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion środa godzina włączenia",
+"name":"Tidsfunktion sOnsdag godzina wlaczenia",
 "register":222 ,
 "min":0 ,
 "max":23 ,
@@ -151,7 +151,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion środa minuta włączenia",
+"name":"Tidsfunktion sOnsdag minuta wlaczenia",
 "register":223 ,
 "min":0 ,
 "max":59 ,
@@ -160,7 +160,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion środa godzina wyłączenia",
+"name":"Tidsfunktion sOnsdag godzina wylaczenia",
 "register":236 ,
 "min":0 ,
 "max":23 ,
@@ -169,7 +169,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Tidsfunktion środa minuta wyłączenia",
+"name":"Tidsfunktion sOnsdag minuta wylaczenia",
 "register":237 ,
 "min":0 ,
 "max":59 ,
@@ -394,7 +394,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Minimalna nastawa chłodzenia",
+"name":"Minimum køleindstilling",
 "register":72 ,
 "min":-99 ,
 "max":100 ,
@@ -403,7 +403,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Maksymalna nastawa chłodzenia",
+"name":"Maksimal køleindstilling",
 "register":73 ,
 "min":-99 ,
 "max":100 ,
@@ -412,14 +412,14 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Adres",
+"name":"Adressese",
 "register":74 ,
 "min":1 ,
 "max":207 ,
 "step":1 ,
 },
 {
-"name":"Opóźnienie załączenia sprężarki",
+"name":"Forsinkelse før kompressorstart",
 "register":13 ,
 "min":0 ,
 "max":999 ,
@@ -437,7 +437,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Minimalny czas postoju sprężarki",
+"name":"Min. kompressorstoptid",
 "register":299 ,
 "min":1 ,
 "max":99 ,
@@ -445,7 +445,7 @@ ENTITIES =[
 "icon":"mdi:timer-edit",
 },
 {
-"name":"Temperatura wyświetlacza offset",
+"name":"Displaytemperatur offset",
 "register":300 ,
 "min":0 ,
 "max":99 ,
@@ -477,7 +477,7 @@ ENTITIES =[
 "icon":"mdi:thermometer",
 },
 {
-"name":"Temperatura ssania offset",
+"name":"Sugetemperatur offset",
 "register":304 ,
 "min":0 ,
 "max":99 ,
@@ -485,7 +485,7 @@ ENTITIES =[
 "icon":"mdi:thermometer",
 },
 {
-"name":"Czujnik wysokiego ciśnienia",
+"name":"Højtrykssensor",
 "register":305 ,
 "min":0 ,
 "max":99 ,
@@ -493,7 +493,7 @@ ENTITIES =[
 "icon":"mdi:gauge",
 },
 {
-"name":"Czujnik niskiego ciśnienia",
+"name":"Lavtrykssensor",
 "register":306 ,
 "min":0 ,
 "max":99 ,
@@ -501,7 +501,7 @@ ENTITIES =[
 "icon":"mdi:gauge",
 },
 {
-"name":"Temperatura Varmtvand offset",
+"name":"Varmtvandstemperatur offset",
 "register":307 ,
 "min":0 ,
 "max":99 ,
@@ -509,7 +509,7 @@ ENTITIES =[
 "icon":"mdi:thermometer",
 },
 {
-"name":"Temperatura parownika offset",
+"name":"Fordampertemperatur offset",
 "register":308 ,
 "min":0 ,
 "max":99 ,
@@ -526,7 +526,7 @@ ENTITIES =[
 "icon":"mdi:lock-reset",
 },
 {
-"name":"Prędkość sprężarki 4<Udendørstemperatur<=9",
+"name":"Kompressorhastighed 4<Udendørstemperatur<=9",
 "register":265 ,
 "min":0 ,
 "max":80 ,
@@ -534,7 +534,7 @@ ENTITIES =[
 "icon":"mdi:bag-personal",
 },
 {
-"name":"Prędkość sprężarki -3<Udendørstemperatur<=4",
+"name":"Kompressorhastighed -3<Udendørstemperatur<=4",
 "register":266 ,
 "min":0 ,
 "max":80 ,
@@ -542,7 +542,7 @@ ENTITIES =[
 "icon":"mdi:bag-personal",
 },
 {
-"name":"Prędkość sprężarki -9<Udendørstemperatur<=-3",
+"name":"Kompressorhastighed -9<Udendørstemperatur<=-3",
 "register":267 ,
 "min":0 ,
 "max":80 ,
@@ -550,7 +550,7 @@ ENTITIES =[
 "icon":"mdi:bag-personal",
 },
 {
-"name":"Prędkość sprężarki -15<Udendørstemperatur<=-9",
+"name":"Kompressorhastighed -15<Udendørstemperatur<=-9",
 "register":268 ,
 "min":0 ,
 "max":80 ,
@@ -558,7 +558,7 @@ ENTITIES =[
 "icon":"mdi:bag-personal",
 },
 {
-"name":"Prędkość sprężarki Udendørstemperatur <=-15",
+"name":"Kompressorhastighed Udendørstemperatur <=-15",
 "register":269 ,
 "min":0 ,
 "max":80 ,
@@ -566,7 +566,7 @@ ENTITIES =[
 "icon":"mdi:bag-personal",
 },
 {
-"name":"Prędkość sprężarki 9<Udendørstemperatur",
+"name":"Kompressorhastighed 9<Udendørstemperatur",
 "register":270 ,
 "min":0 ,
 "max":80 ,
@@ -574,7 +574,7 @@ ENTITIES =[
 "icon":"mdi:bag-personal",
 },
 {
-"name":"Prędkość sprężarki 38<Udendørstemperatur",
+"name":"Kompressorhastighed 38<Udendørstemperatur",
 "register":271 ,
 "min":0 ,
 "max":80 ,
@@ -582,7 +582,7 @@ ENTITIES =[
 "icon":"mdi:bag-personal",
 },
 {
-"name":"Prędkość sprężarki 33<Udendørstemperatur<=38",
+"name":"Kompressorhastighed 33<Udendørstemperatur<=38",
 "register":272 ,
 "min":0 ,
 "max":80 ,
@@ -590,7 +590,7 @@ ENTITIES =[
 "icon":"mdi:bag-personal",
 },
 {
-"name":"Prędkość sprężarki 30<Udendørstemperatur<=33",
+"name":"Kompressorhastighed 30<Udendørstemperatur<=33",
 "register":273 ,
 "min":0 ,
 "max":80 ,
@@ -598,7 +598,7 @@ ENTITIES =[
 "icon":"mdi:bag-personal",
 },
 {
-"name":"Prędkość sprężarki 26<Udendørstemperatur<=30",
+"name":"Kompressorhastighed 26<Udendørstemperatur<=30",
 "register":274 ,
 "min":0 ,
 "max":80 ,
@@ -606,7 +606,7 @@ ENTITIES =[
 "icon":"mdi:bag-personal",
 },
 {
-"name":"Prędkość sprężarki temperatur zewnętrzna<=26",
+"name":"Kompressorhastighed temperatur zewnętrzna<=26",
 "register":275 ,
 "min":0 ,
 "max":80 ,
@@ -614,7 +614,7 @@ ENTITIES =[
 "icon":"mdi:bag-personal",
 },
 {
-"name":"Defrost minimalna prędkość sprężarki %",
+"name":"Min. kompressorhastighed ved afrimning %",
 "register":77 ,
 "min":0 ,
 "max":90 ,
@@ -622,7 +622,7 @@ ENTITIES =[
 "icon":"mdi:bag-personal",
 },
 {
-"name":"Defrost docelowe otwarcie zaworu EEV",
+"name":"Målrettet EEV-åbning for afrimning",
 "register":78 ,
 "min":0 ,
 "max":480 ,
@@ -631,7 +631,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Defrost otwarcie zaworu EEV po zakończeniu",
+"name":"EEV-åbning efter afrimning",
 "register":79 ,
 "min":0 ,
 "max":480 ,
@@ -640,7 +640,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Defrost czas otwarcia zaworu EEV",
+"name":"EEV-åbningstid",
 "register":80 ,
 "min":0 ,
 "max":999 ,
@@ -649,7 +649,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Defrost docelowa prędkość sprężarki podczas odszraniania",
+"name":"Målrettet kompressorhastighed under afrimning",
 "register":81 ,
 "min":30 ,
 "max":120 ,
@@ -658,7 +658,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Defrost prędkość pompy obiegowej",
+"name":"Cirkulationspumpehastighed under afrimning",
 "register":82 ,
 "min":30 ,
 "max":120 ,
@@ -667,7 +667,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Defrost temperatur parownika, przy której rozpoczyna się odszranianie",
+"name":"Fordampertemperatur hvor afrimning starter",
 "register":83 ,
 "min":-20 ,
 "max":30 ,
@@ -676,7 +676,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Defrost temperatur parownika, przy której kończy się odszranianie",
+"name":"Fordampertemperatur hvor afrimning slutter",
 "register":84 ,
 "min":0 ,
 "max":30 ,
@@ -685,7 +685,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Defrost temperatur zewnętrzna dla uruchomienia odszraniania",
+"name":"Afrimning temperatur zewnętrzna dla uruchomienia odszraniania",
 "register":85 ,
 "min":-30 ,
 "max":30 ,
@@ -694,7 +694,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Defrost min różnica temp między powietrzem a parownikiem wymagana do odszraniania",
+"name":"Min. ΔT mellem luft og fordamper krævet for afrimning",
 "register":86 ,
 "min":1 ,
 "max":30 ,
@@ -703,7 +703,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Defrost opóźnienie rozpoczęcia odszraniania",
+"name":"Forsinkelse før start af afrimning",
 "register":87 ,
 "min":0 ,
 "max":90 ,
@@ -712,7 +712,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Defrost minimalny czas",
+"name":"Afrimning minimalny czas",
 "register":88 ,
 "min":1 ,
 "max":99 ,
@@ -721,7 +721,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Defrost maksymalny czas",
+"name":"Afrimning maksymalny czas",
 "register":89 ,
 "min":1 ,
 "max":99 ,
@@ -730,7 +730,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Defrost interwał odszraniania",
+"name":"Afrimning interwał odszraniania",
 "register":90 ,
 "min":0 ,
 "max":490 ,
@@ -739,7 +739,7 @@ ENTITIES =[
 "icon":"mdi:snowflake-melt",
 },
 {
-"name":"Defrost wymuszone odszranianie co",
+"name":"Afrimning wymuszone odszranianie co",
 "register":91 ,
 "min":0 ,
 "max":999 ,

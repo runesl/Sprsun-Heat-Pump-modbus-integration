@@ -112,7 +112,7 @@ ENTITIES =[
 
 },
 {
-"name":"Histereza ogrzewania i chłodzenia start",
+"name":"Hystereser start for varme/køling",
 "unique_id":"histereza_ogrzewania_i_chlodzenia_start",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -148,7 +148,7 @@ ENTITIES =[
 
 },
 {
-"name":"Histereza ogrzewania i chłodzenia stop",
+"name":"Hystereser stop for varme/køling",
 "unique_id":"histereza_ogrzewania_i_chlodzenia_stop",
 "model_path":__file__ ,
 "data_type":"uint16",
@@ -1306,7 +1306,7 @@ ENTITIES =[
 "icon_off":"mdi:radiator-off",
 },
 {
-"name":"Temperatura załączenia grzałki",
+"name":"Temperatur załączenia grzałki",
 "unique_id":"temperatur_zalaczenia_grzalki",
 "model_path":__file__ ,
 "data_type":"int16",
