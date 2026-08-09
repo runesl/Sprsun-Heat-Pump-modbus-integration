@@ -3,7 +3,7 @@ from __future__ import annotations
 ENTITIES = [
     {
         "name": "Opvarmning ønsket temperatur",
-        "unique_id": "ogrzewanie_temperatura_zadana",
+        "unique_id": "temp_heating_setp",
         # Ścieżka pliku modelowego (używana np. w device_info)
         "model_path": __file__,
         "temperature_unit": "C",
@@ -19,10 +19,10 @@ ENTITIES = [
         "icon_heat": "mdi:radiator",
         "icon_off": "mdi:radiator-off",
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 1,
-            "off": [0, 2],
+            "heat": [1, 4],
+            "off": [0, 2, 3],
         },
         # DODATKOWA OPCJA (jeśli kiedyś będziesz chciał):
         # możliwość zdefiniowania drugiego rejestru, który "blokuje" tryby
@@ -44,7 +44,7 @@ ENTITIES = [
     },
     {
         "name": "Køling ønsket temperatur",
-        "unique_id": "chlodzenie_temperatura_zadana",
+        "unique_id": "temp_cooling_setp",
         # Ścieżka pliku modelowego (używana np. w device_info)
         "model_path": __file__,
         "temperature_unit": "C",
@@ -60,10 +60,10 @@ ENTITIES = [
         "icon_off": "mdi:radiator-off",
         "icon_cool": "mdi:snowflake",
         "hvac_modes": ["cool", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "cool": 0,
-            "off": [1, 2],
+            "cool": [0, 3],
+            "off": [1, 2, 4],
         },
         "hide_temp_when_off": True,
         "disable_slider_when_off": True,
@@ -79,16 +79,16 @@ ENTITIES = [
 
     {
         "name": "Varmtvand ønsket temperatur",
-        "unique_id": "cwu_temperatura_zadana",
+        "unique_id": "temp_dwh_setp",
         "model_path": __file__,
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 195,
         "target_temp_register": 3,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 2,
+            "heat": [2, 3, 4],
             "off": [0, 1],
         },
         "preset_register": 0,
@@ -191,9 +191,9 @@ ENTITIES = [
         "current_temp_register": 4,
         "target_temp_register": 4,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 2,
+            "heat": [2, 3, 4],
             "off": [0, 1],
         },
         "preset_register": 0,
@@ -225,9 +225,9 @@ ENTITIES = [
         "current_temp_register": 5,
         "target_temp_register": 5,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 2,
+            "heat": [2, 3, 4],
             "off": [0, 1],
         },
         "preset_register": 0,
@@ -258,10 +258,10 @@ ENTITIES = [
         "current_temp_register": 276,
         "target_temp_register": 276,
         "hvac_modes": ["cool", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "cool": 0,
-            "off": [1, 2],
+            "cool": [0, 3],
+            "off": [1, 2, 4],
         },
         "preset_register": 0,
         "preset_values": {
@@ -291,10 +291,10 @@ ENTITIES = [
         "current_temp_register": 277,
         "target_temp_register": 277,
         "hvac_modes": ["cool", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "cool": 0,
-            "off": [1, 2],
+            "cool": [0, 3],
+            "off": [1, 2, 4],
         },
         "preset_register": 0,
         "preset_values": {
@@ -324,10 +324,10 @@ ENTITIES = [
         "current_temp_register": 278,
         "target_temp_register": 278,
         "hvac_modes": ["cool", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "cool": 0,
-            "off": [1, 2],
+            "cool": [0, 3],
+            "off": [1, 2, 4],
         },
         "preset_register": 0,
         "preset_values": {
@@ -357,10 +357,10 @@ ENTITIES = [
         "current_temp_register": 279,
         "target_temp_register": 279,
         "hvac_modes": ["cool", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "cool": 0,
-            "off": [1, 2],
+            "cool": [0, 3],
+            "off": [1, 2, 4],
         },
         "preset_register": 0,
         "preset_values": {
@@ -390,10 +390,10 @@ ENTITIES = [
         "current_temp_register": 336,
         "target_temp_register": 336,
         "hvac_modes": ["cool", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "cool": 0,
-            "off": [1, 2],
+            "cool": [0, 3],
+            "off": [1, 2, 4],
         },
         "preset_register": 0,
         "preset_values": {
@@ -423,10 +423,10 @@ ENTITIES = [
         "current_temp_register": 288,
         "target_temp_register": 288,
         "hvac_modes": ["cool", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "cool": 0,
-            "off": [1, 2],
+            "cool": [0, 3],
+            "off": [1, 2, 4],
         },
         "preset_register": 0,
         "preset_values": {
@@ -456,10 +456,10 @@ ENTITIES = [
         "current_temp_register": 289,
         "target_temp_register": 289,
         "hvac_modes": ["cool", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "cool": 0,
-            "off": [1, 2],
+            "cool": [0, 3],
+            "off": [1, 2, 4],
         },
         "preset_register": 0,
         "preset_values": {
@@ -489,10 +489,10 @@ ENTITIES = [
         "current_temp_register": 290,
         "target_temp_register": 290,
         "hvac_modes": ["cool", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "cool": 0,
-            "off": [1, 2],
+            "cool": [0, 3],
+            "off": [1, 2, 4],
         },
         "preset_register": 0,
         "preset_values": {
@@ -522,10 +522,10 @@ ENTITIES = [
         "current_temp_register": 280,
         "target_temp_register": 280,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 1,
-            "off": [0, 2],
+            "heat": [1, 4],
+            "off": [0, 2, 3],
         },
         "preset_register": 0,
         "preset_values": {
@@ -555,10 +555,10 @@ ENTITIES = [
         "current_temp_register": 281,
         "target_temp_register": 281,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 1,
-            "off": [0, 2],
+            "heat": [1, 4],
+            "off": [0, 2, 3],
         },
         "preset_register": 0,
         "preset_values": {
@@ -588,10 +588,10 @@ ENTITIES = [
         "current_temp_register": 282,
         "target_temp_register": 282,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 1,
-            "off": [0, 2],
+            "heat": [1, 4],
+            "off": [0, 2, 3],
         },
         "preset_register": 0,
         "preset_values": {
@@ -621,10 +621,10 @@ ENTITIES = [
         "current_temp_register": 283,
         "target_temp_register": 283,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 1,
-            "off": [0, 2],
+            "heat": [1, 4],
+            "off": [0, 2, 3],
         },
         "preset_register": 0,
         "preset_values": {
@@ -654,10 +654,10 @@ ENTITIES = [
         "current_temp_register": 291,
         "target_temp_register": 291,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 1,
-            "off": [0, 2],
+            "heat": [1, 4],
+            "off": [0, 2, 3],
         },
         "preset_register": 0,
         "preset_values": {
@@ -687,10 +687,10 @@ ENTITIES = [
         "current_temp_register": 292,
         "target_temp_register": 292,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 1,
-            "off": [0, 2],
+            "heat": [1, 4],
+            "off": [0, 2, 3],
         },
         "preset_register": 0,
         "preset_values": {
@@ -720,10 +720,10 @@ ENTITIES = [
         "current_temp_register": 293,
         "target_temp_register": 293,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 1,
-            "off": [0, 2],
+            "heat": [1, 4],
+            "off": [0, 2, 3],
         },
         "preset_register": 0,
         "preset_values": {
@@ -753,10 +753,10 @@ ENTITIES = [
         "current_temp_register": 337,
         "target_temp_register": 337,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 1,
-            "off": [0, 2],
+            "heat": [1, 4],
+            "off": [0, 2, 3],
         },
         "preset_register": 0,
         "preset_values": {
@@ -786,9 +786,9 @@ ENTITIES = [
         "current_temp_register": 284,
         "target_temp_register": 284,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 2,
+            "heat": [2, 3, 4],
             "off": [0, 1],
         },
         "preset_register": 0,
@@ -819,9 +819,9 @@ ENTITIES = [
         "current_temp_register": 285,
         "target_temp_register": 285,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 2,
+            "heat": [2, 3, 4],
             "off": [0, 1],
         },
         "preset_register": 0,
@@ -852,9 +852,9 @@ ENTITIES = [
         "current_temp_register": 286,
         "target_temp_register": 286,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 2,
+            "heat": [2, 3, 4],
             "off": [0, 1],
         },
         "preset_register": 0,
@@ -885,9 +885,9 @@ ENTITIES = [
         "current_temp_register": 287,
         "target_temp_register": 287,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 2,
+            "heat": [2, 3, 4],
             "off": [0, 1],
         },
         "preset_register": 0,
@@ -918,9 +918,9 @@ ENTITIES = [
         "current_temp_register": 294,
         "target_temp_register": 294,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 2,
+            "heat": [2, 3, 4],
             "off": [0, 1],
         },
         "preset_register": 0,
@@ -951,9 +951,9 @@ ENTITIES = [
         "current_temp_register": 295,
         "target_temp_register": 295,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 2,
+            "heat": [2, 3, 4],
             "off": [0, 1],
         },
         "preset_register": 0,
@@ -984,9 +984,9 @@ ENTITIES = [
         "current_temp_register": 296,
         "target_temp_register": 296,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 2,
+            "heat": [2, 3, 4],
             "off": [0, 1],
         },
         "preset_register": 0,
@@ -1017,9 +1017,9 @@ ENTITIES = [
         "current_temp_register": 297,
         "target_temp_register": 297,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 2,
+            "heat": [2, 3, 4],
             "off": [0, 1],
         },
         "preset_register": 0,
@@ -1050,10 +1050,10 @@ ENTITIES = [
         "current_temp_register": 248,
         "target_temp_register": 248,
         "hvac_modes": ["cool", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "cool": 0,
-            "off": [1, 2],
+            "cool": [0, 3],
+            "off": [1, 2, 4],
         },
         "preset_register": 0,
         "preset_values": {
@@ -1083,10 +1083,10 @@ ENTITIES = [
         "current_temp_register": 249,
         "target_temp_register": 249,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 1,
-            "off": [0, 2],
+            "heat": [1, 4],
+            "off": [0, 2, 3],
         },
         "preset_register": 0,
         "preset_values": {
@@ -1116,10 +1116,10 @@ ENTITIES = [
         "current_temp_register": 252,
         "target_temp_register": 252,
         "hvac_modes": ["cool", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "cool": 0,
-            "off": [1, 2],
+            "cool": [0, 3],
+            "off": [1, 2, 4],
         },
         "preset_register": 0,
         "preset_values": {
@@ -1149,10 +1149,10 @@ ENTITIES = [
         "current_temp_register": 253,
         "target_temp_register": 253,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 1,
-            "off": [0, 2],
+            "heat": [1, 4],
+            "off": [0, 2, 3],
         },
         "preset_register": 0,
         "preset_values": {
@@ -1182,10 +1182,10 @@ ENTITIES = [
         "current_temp_register": 256,
         "target_temp_register": 256,
         "hvac_modes": ["cool", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "cool": 0,
-            "off": [1, 2],
+            "cool": [0, 3],
+            "off": [1, 2, 4],
         },
         "preset_register": 0,
         "preset_values": {
@@ -1215,10 +1215,10 @@ ENTITIES = [
         "current_temp_register": 257,
         "target_temp_register": 257,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 1,
-            "off": [0, 2],
+            "heat": [1, 4],
+            "off": [0, 2, 3],
         },
         "preset_register": 0,
         "preset_values": {
@@ -1248,10 +1248,10 @@ ENTITIES = [
         "current_temp_register": 260,
         "target_temp_register": 260,
         "hvac_modes": ["cool", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "cool": 0,
-            "off": [1, 2],
+            "cool": [0, 3],
+            "off": [1, 2, 4],
         },
         "preset_register": 0,
         "preset_values": {
@@ -1281,10 +1281,10 @@ ENTITIES = [
         "current_temp_register": 261,
         "target_temp_register": 261,
         "hvac_modes": ["heat", "off"],
-        "hvac_mode_register": 215,
+        "hvac_mode_register": 0,
         "hvac_mode_values": {
-            "heat": 1,
-            "off": [0, 2],
+            "heat": [1, 4],
+            "off": [0, 2, 3],
         },
         "preset_register": 0,
         "preset_values": {
