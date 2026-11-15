@@ -2,6 +2,7 @@
 
 import ast
 from datetime import datetime, timedelta, timezone
+import importlib.util
 from pathlib import Path
 from types import SimpleNamespace
 import unittest
@@ -11,6 +12,10 @@ from unittest.mock import AsyncMock, Mock, patch
 ROOT = Path(__file__).resolve().parents[1] / "custom_components/sprsun"
 MODEL = "cgk_050v3l"
 NOW = datetime(2026, 11, 15, 12, tzinfo=timezone.utc)
+
+spec = importlib.util.spec_from_file_location("sprsun_counter", ROOT / "counter.py")
+counter_module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(counter_module)
 
 
 def definitions(filename, variable):
@@ -73,7 +78,7 @@ class BinarySourceTests(unittest.IsolatedAsyncioTestCase):
             "SensorEntity": FakeSensorEntity,
             "RestoreEntity": FakeRestoreEntity,
             "HomeAssistant": object,
-            "datetime": datetime,
+            "Counter": counter_module.Counter,
             "dt_util": SimpleNamespace(
                 now=lambda: NOW,
                 as_local=lambda value: value.astimezone(timezone.utc),
@@ -287,16 +292,16 @@ class BinarySourceTests(unittest.IsolatedAsyncioTestCase):
         hass = SimpleNamespace(states=SimpleNamespace(get=states.get))
         with patch.dict(
             self.namespace, {"er": SimpleNamespace(async_get=lambda hass: registry)}
-        ):
+        ), patch.object(self.namespace["dt_util"], "now", return_value=NOW) as clock:
             counter = self.counter_class(hass, "entry", MODEL, definition)
             await counter.async_added_to_hass()
             await counter._handle_defrost_state_change(None)
-            counter._defrost_start = datetime.now() - timedelta(seconds=61)
+            clock.return_value = NOW + timedelta(seconds=61)
             states["binary_sensor.actual_fan"].state = "on"
             await counter._handle_defrost_state_change(None)
             self.assertEqual(counter.native_value, 1)
 
-    async def test_defrost_counter_discards_periods_with_unknown_signals(self):
+    async def test_defrost_counter_discards_ha_unknown_states(self):
         definition = next(
             item for item in definitions("sensors.py", "COUNTERS")
             if item["unique_id"] == "defrosts_total"
@@ -309,20 +314,21 @@ class BinarySourceTests(unittest.IsolatedAsyncioTestCase):
                     counter = self.counter_class(hass, "entry", MODEL, definition)
                     states[counter._source_compressor] = SimpleNamespace(state="on")
                     states[counter._source_fan] = SimpleNamespace(state="off")
-                    await counter._handle_defrost_state_change(None)
-                    counter._defrost_start = datetime.now() - timedelta(seconds=61)
-                    states[getattr(counter, source)] = (
-                        SimpleNamespace(state=invalid_state)
-                        if invalid_state is not None else None
-                    )
-                    await counter._handle_defrost_state_change(None)
-                    self.assertEqual(counter.native_value, 0)
-                    self.assertFalse(counter._defrost_active)
-                    self.assertIsNone(counter._defrost_start)
-                    states[counter._source_compressor] = SimpleNamespace(state="on")
-                    states[counter._source_fan] = SimpleNamespace(state="on")
-                    await counter._handle_defrost_state_change(None)
-                    self.assertEqual(counter.native_value, 0)
+                    with patch.object(
+                        self.namespace["dt_util"], "now", return_value=NOW
+                    ) as clock:
+                        await counter._handle_defrost_state_change(None)
+                        clock.return_value = NOW + timedelta(seconds=61)
+                        states[getattr(counter, source)] = (
+                            SimpleNamespace(state=invalid_state)
+                            if invalid_state is not None else None
+                        )
+                        await counter._handle_defrost_state_change(None)
+                        self.assertEqual(counter.native_value, 0)
+                        states[counter._source_compressor] = SimpleNamespace(state="on")
+                        states[counter._source_fan] = SimpleNamespace(state="on")
+                        await counter._handle_defrost_state_change(None)
+                        self.assertEqual(counter.native_value, 0)
 
     async def test_daily_sensor_restores_resets_and_unsubscribes_on_unload(self):
         definition = next(
@@ -354,37 +360,6 @@ class BinarySourceTests(unittest.IsolatedAsyncioTestCase):
             unsubscribe_state.assert_called_once_with()
             unsubscribe_reset.assert_called_once_with()
 
-    async def test_restore_keeps_only_counts_from_the_current_period(self):
-        cases = (
-            ("daily", "2026-11-14", "2026-11-14", 0),
-            ("daily", "2026-11-15", "2026-11-15", 7),
-            ("monthly", "2026-10-31", "2026-10", 0),
-            ("monthly", "2026-11-01", "2026-11", 7),
-            ("monthly", "2025-11-15", "2025-11", 0),
-            ("yearly", "2025-12-31", "2025", 0),
-            ("yearly", "2026-01-01", "2026", 7),
-            (None, "2025-11-15", None, 7),
-        )
-        for reset, saved_date, period, expected in cases:
-            for legacy in (False, True):
-                with self.subTest(reset=reset, saved_date=saved_date, legacy=legacy):
-                    counter = self.counter_class(object(), "entry", MODEL, {
-                        "name": "Counter", "unique_id": "test", "reset": reset,
-                    })
-                    counter.async_get_last_state = AsyncMock(
-                        return_value=SimpleNamespace(
-                            state="7",
-                            attributes={} if legacy else {"counter_period": period},
-                            last_updated=(
-                                datetime.fromisoformat(saved_date).replace(
-                                    tzinfo=timezone.utc
-                                ) if legacy else NOW
-                            ),
-                        )
-                    )
-                    await counter.async_added_to_hass()
-                    self.assertEqual(counter.native_value, expected)
-
     async def test_legacy_restore_uses_home_assistants_local_date(self):
         local_tz = timezone(timedelta(hours=1))
         local_now = datetime(2026, 11, 16, 0, 30, tzinfo=local_tz)
@@ -408,53 +383,36 @@ class BinarySourceTests(unittest.IsolatedAsyncioTestCase):
                     await counter.async_added_to_hass()
                     self.assertEqual(counter.native_value, expected)
 
-    async def test_first_event_in_new_period_is_not_erased_by_midnight_reset(self):
-        for reset, next_period in (
-            ("daily", datetime(2026, 11, 16, tzinfo=timezone.utc)),
-            ("monthly", datetime(2026, 12, 1, tzinfo=timezone.utc)),
-            ("yearly", datetime(2027, 1, 1, tzinfo=timezone.utc)),
-        ):
-            for kind in ("start", "defrost"):
-                with self.subTest(reset=reset, kind=kind):
-                    states = {}
-                    hass = SimpleNamespace(states=SimpleNamespace(get=states.get))
-                    counter = self.counter_class(hass, "entry", MODEL, {
-                        "name": "Counter", "unique_id": "test", "reset": reset,
-                    })
-                    await counter.async_added_to_hass()
-                    counter._value = 7
-                    with patch.dict(self.namespace, {"dt_util": SimpleNamespace(
-                        now=lambda: next_period,
-                        as_local=lambda value: value.astimezone(timezone.utc),
-                    )}):
-                        if kind == "start":
-                            await counter._handle_state_change(SimpleNamespace(data={
-                                "old_state": SimpleNamespace(state="off"),
-                                "new_state": SimpleNamespace(state="on"),
-                            }))
-                        else:
-                            counter._source_compressor = "binary_sensor.compressor"
-                            counter._source_fan = "binary_sensor.fan"
-                            states[counter._source_compressor] = SimpleNamespace(state="on")
-                            states[counter._source_fan] = SimpleNamespace(state="on")
-                            counter._defrost_active = True
-                            counter._defrost_start = datetime.now() - timedelta(seconds=61)
-                            await counter._handle_defrost_state_change(None)
-                        self.assertEqual(counter.native_value, 1)
-                        await counter._handle_reset_time_event(next_period)
-                        self.assertEqual(counter.native_value, 1)
-                        restored = self.counter_class(hass, "entry", MODEL, {
-                            "name": "Counter", "unique_id": "test", "reset": reset,
-                        })
-                        restored.async_get_last_state = AsyncMock(
-                            return_value=SimpleNamespace(
-                                state=str(counter.native_value),
-                                attributes=counter.extra_state_attributes,
-                                last_updated=NOW,
-                            )
-                        )
-                        await restored.async_added_to_hass()
-                        self.assertEqual(restored.native_value, 1)
+    async def test_counter_period_metadata_survives_reload_after_midnight(self):
+        next_day = datetime(2026, 11, 16, tzinfo=timezone.utc)
+        counter = self.counter_class(object(), "entry", MODEL, {
+            "name": "Counter", "unique_id": "test", "reset": "daily",
+        })
+        counter.async_get_last_state = AsyncMock(return_value=SimpleNamespace(
+            state="7", attributes={"counter_period": "2026-11-15"},
+            last_updated=NOW,
+        ))
+        await counter.async_added_to_hass()
+        with patch.object(self.namespace["dt_util"], "now", return_value=next_day):
+            await counter._handle_state_change(SimpleNamespace(data={
+                "old_state": SimpleNamespace(state="off"),
+                "new_state": SimpleNamespace(state="on"),
+            }))
+            self.assertEqual(counter.native_value, 1)
+            await counter._handle_reset_time_event(next_day)
+            self.assertEqual(counter.native_value, 1)
+            restored = self.counter_class(object(), "entry", MODEL, {
+                "name": "Counter", "unique_id": "test", "reset": "daily",
+            })
+            restored.async_get_last_state = AsyncMock(
+                return_value=SimpleNamespace(
+                    state=str(counter.native_value),
+                    attributes=counter.extra_state_attributes,
+                    last_updated=NOW,
+                )
+            )
+            await restored.async_added_to_hass()
+            self.assertEqual(restored.native_value, 1)
 
     async def test_platform_setup_places_counters_only_in_sensor_domain(self):
         entry = SimpleNamespace(entry_id="entry")

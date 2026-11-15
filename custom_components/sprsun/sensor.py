@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
@@ -16,6 +15,7 @@ from homeassistant.helpers.restore_state import RestoreEntity
 from .const import DOMAIN
 from .coordinator import SprsunCoordinator
 from .binary_sensor import resolve_source_entity_id
+from .counter import Counter
 
 # Importy sensorów rejestrowych
 from .models.CGK050V3L.sensors import SENSORS as SENSORS_050
@@ -208,7 +208,7 @@ class SprsunCounterSensor(RestoreEntity, SensorEntity):
         self.hass = hass
         self._entry_id = entry_id
         self._model = model
-        self._reset = definition.get("reset")
+        self._counter = Counter(definition.get("reset"))
         self._source_sensor = definition.get("source_sensor")
         self._source_compressor = definition.get("source_compressor")
         self._source_fan = definition.get("source_fan")
@@ -217,10 +217,6 @@ class SprsunCounterSensor(RestoreEntity, SensorEntity):
             if source:
                 setattr(self, attribute, source.replace("<model>", model))
 
-        self._value = 0
-        self._period = None
-        self._defrost_active = False
-        self._defrost_start = None
         self._unsub_state = None
         self._unsub_defrost = None
         self._unsub_reset = None
@@ -229,7 +225,9 @@ class SprsunCounterSensor(RestoreEntity, SensorEntity):
         self._attr_unique_id = f"{DOMAIN}_{model}_counter_{definition['unique_id']}"
         self.entity_id = f"sensor.sprsun_{model}_{definition['unique_id']}"
         self._attr_icon = definition.get("icon")
-        self._attr_state_class = "total_increasing" if self._reset is None else None
+        self._attr_state_class = (
+            "total_increasing" if self._counter.reset_mode is None else None
+        )
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
@@ -240,18 +238,16 @@ class SprsunCounterSensor(RestoreEntity, SensorEntity):
             )
 
         last_state = await self.async_get_last_state()
-        self._period = self._period_for(dt_util.now())
+        now = dt_util.now()
         if last_state is not None:
-            try:
-                self._value = int(float(last_state.state))
-            except (TypeError, ValueError, OverflowError):
-                self._value = 0
-            if self._period is not None:
-                restored_period = last_state.attributes.get("counter_period")
-                if restored_period is None:
-                    restored_period = self._period_for(last_state.last_updated)
-                if restored_period != self._period:
-                    self._value = 0
+            self._counter.restore(
+                last_state.state,
+                now,
+                period=last_state.attributes.get("counter_period"),
+                last_updated=dt_util.as_local(last_state.last_updated),
+            )
+        else:
+            self._counter.reset_if_needed(now)
         self.async_write_ha_state()
 
         if self._source_sensor:
@@ -264,7 +260,7 @@ class SprsunCounterSensor(RestoreEntity, SensorEntity):
                 [self._source_compressor, self._source_fan],
                 self._handle_defrost_state_change,
             )
-        if self._reset in ("daily", "monthly", "yearly"):
+        if self._counter.reset_mode in ("daily", "monthly", "yearly"):
             self._unsub_reset = async_track_time_change(
                 self.hass, self._handle_reset_time_event,
                 hour=0, minute=0, second=0,
@@ -280,64 +276,36 @@ class SprsunCounterSensor(RestoreEntity, SensorEntity):
 
     @property
     def native_value(self):
-        return self._value
+        return self._counter.value
 
     @property
     def extra_state_attributes(self):
-        return {"counter_period": self._period} if self._period is not None else {}
-
-    def _period_for(self, now):
-        date_format = {
-            "daily": "%Y-%m-%d",
-            "monthly": "%Y-%m",
-            "yearly": "%Y",
-        }.get(self._reset)
-        return dt_util.as_local(now).strftime(date_format) if date_format else None
+        period = self._counter.period
+        return {"counter_period": period} if period is not None else {}
 
     async def _handle_reset_time_event(self, now):
-        period = self._period_for(now)
-        if period is not None and period != self._period:
-            self._value = 0
-            self._period = period
+        if self._counter.reset_if_needed(dt_util.as_local(now)):
             self.async_write_ha_state()
 
+    @staticmethod
+    def _binary_value(state):
+        return {"on": True, "off": False}.get(state.state) if state else None
+
     async def _handle_state_change(self, event):
-        old = event.data.get("old_state")
-        new = event.data.get("new_state")
-        if old and new and old.state == "off" and new.state == "on":
-            await self._handle_reset_time_event(dt_util.now())
-            self._value += 1
+        if self._counter.handle_transition(
+            self._binary_value(event.data.get("old_state")),
+            self._binary_value(event.data.get("new_state")),
+            dt_util.now(),
+        ):
             self.async_write_ha_state()
 
     async def _handle_defrost_state_change(self, event):
-        """Count a completed compressor-ON/fan-OFF period of at least 60 seconds."""
-        now = datetime.now()
-        compressor = self.hass.states.get(self._source_compressor)
-        fan = self.hass.states.get(self._source_fan)
-        if (
-            not compressor
-            or not fan
-            or compressor.state not in ("on", "off")
-            or fan.state not in ("on", "off")
+        if self._counter.handle_defrost(
+            self._binary_value(self.hass.states.get(self._source_compressor)),
+            self._binary_value(self.hass.states.get(self._source_fan)),
+            dt_util.now(),
         ):
-            self._defrost_active = False
-            self._defrost_start = None
-            return
-        if compressor.state == "on" and fan.state == "off":
-            if not self._defrost_active:
-                self._defrost_active = True
-                self._defrost_start = now
-            return
-        if (
-            self._defrost_active
-            and self._defrost_start
-            and (now - self._defrost_start).total_seconds() >= 60
-        ):
-            await self._handle_reset_time_event(dt_util.now())
-            self._value += 1
             self.async_write_ha_state()
-        self._defrost_active = False
-        self._defrost_start = None
 
     @property
     def device_info(self):
