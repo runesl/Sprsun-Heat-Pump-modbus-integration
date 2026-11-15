@@ -16,20 +16,12 @@ from .const import DOMAIN
 from .coordinator import SprsunCoordinator
 
 # Import definicji numberów per model
-from .models.CGK025V3L.numbers import ENTITIES as NUMBERS_025
-from .models.CGK030V3L.numbers import ENTITIES as NUMBERS_030
-from .models.CGK040V3L.numbers import ENTITIES as NUMBERS_040
 from .models.CGK050V3L.numbers import ENTITIES as NUMBERS_050
-from .models.CGK060V3L.numbers import ENTITIES as NUMBERS_060
 
 _LOGGER = logging.getLogger(__name__)
 
 MODEL_NUMBERS_MAP = {
-    "cgk_025v3l": NUMBERS_025,
-    "cgk_030v3l": NUMBERS_030,
-    "cgk_040v3l": NUMBERS_040,
     "cgk_050v3l": NUMBERS_050,
-    "cgk_060v3l": NUMBERS_060,
 }
 
 

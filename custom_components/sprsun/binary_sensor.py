@@ -9,20 +9,12 @@ from .const import DOMAIN
 from .coordinator import SprsunCoordinator
 
 # Import definicji binary sensorów per model
-from .models.CGK025V3L.binary_sensors import BINARY_SENSORS as BINARY_025
-from .models.CGK030V3L.binary_sensors import BINARY_SENSORS as BINARY_030
-from .models.CGK040V3L.binary_sensors import BINARY_SENSORS as BINARY_040
 from .models.CGK050V3L.binary_sensors import BINARY_SENSORS as BINARY_050
-from .models.CGK060V3L.binary_sensors import BINARY_SENSORS as BINARY_060
 
 _LOGGER = logging.getLogger(__name__)
 
 MODEL_BINARY_MAP = {
-    "cgk_025v3l": BINARY_025,
-    "cgk_030v3l": BINARY_030,
-    "cgk_040v3l": BINARY_040,
     "cgk_050v3l": BINARY_050,
-    "cgk_060v3l": BINARY_060,
 }
 
 

@@ -9,52 +9,19 @@ from .const import DOMAIN
 from .coordinator import SprsunCoordinator
 
 # Importy sensorów rejestrowych
-from .models.CGK025V3L.sensors import SENSORS as SENSORS_025
-from .models.CGK030V3L.sensors import SENSORS as SENSORS_030
-from .models.CGK040V3L.sensors import SENSORS as SENSORS_040
 from .models.CGK050V3L.sensors import SENSORS as SENSORS_050
-from .models.CGK060V3L.sensors import SENSORS as SENSORS_060
 
 # Importy logic sensors
-from .models.CGK025V3L.logic_sensors import *
-from .models.CGK030V3L.logic_sensors import *
-from .models.CGK040V3L.logic_sensors import *
 from .models.CGK050V3L.logic_sensors import *
-from .models.CGK060V3L.logic_sensors import *
 
 _LOGGER = logging.getLogger(__name__)
 
 MODEL_SENSORS_MAP = {
-    "cgk_025v3l": SENSORS_025,
-    "cgk_030v3l": SENSORS_030,
-    "cgk_040v3l": SENSORS_040,
     "cgk_050v3l": SENSORS_050,
-    "cgk_060v3l": SENSORS_060,
 }
 
-# Usunięto CompressorStarts i DefrostCounter
 MODEL_LOGIC_MAP = {
-    "cgk_025v3l": {
-        "CompressorRuntime": SprsunCompressorRuntimeSensor,
-        "FanRuntime": SprsunFanRuntimeSensor,
-        "OwnershipDays": SprsunOwnershipDaysSensor,
-    },
-    "cgk_030v3l": {
-        "CompressorRuntime": SprsunCompressorRuntimeSensor,
-        "FanRuntime": SprsunFanRuntimeSensor,
-        "OwnershipDays": SprsunOwnershipDaysSensor,
-    },
-    "cgk_040v3l": {
-        "CompressorRuntime": SprsunCompressorRuntimeSensor,
-        "FanRuntime": SprsunFanRuntimeSensor,
-        "OwnershipDays": SprsunOwnershipDaysSensor,
-    },
     "cgk_050v3l": {
-        "CompressorRuntime": SprsunCompressorRuntimeSensor,
-        "FanRuntime": SprsunFanRuntimeSensor,
-        "OwnershipDays": SprsunOwnershipDaysSensor,
-    },
-    "cgk_060v3l": {
         "CompressorRuntime": SprsunCompressorRuntimeSensor,
         "FanRuntime": SprsunFanRuntimeSensor,
         "OwnershipDays": SprsunOwnershipDaysSensor,

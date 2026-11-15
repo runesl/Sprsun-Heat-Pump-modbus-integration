@@ -9,20 +9,12 @@ from .const import DOMAIN
 from .coordinator import SprsunCoordinator
 
 # modele
-from .models.CGK025V3L.switches import ENTITIES as SWITCHES_025
-from .models.CGK030V3L.switches import ENTITIES as SWITCHES_030
-from .models.CGK040V3L.switches import ENTITIES as SWITCHES_040
 from .models.CGK050V3L.switches import ENTITIES as SWITCHES_050
-from .models.CGK060V3L.switches import ENTITIES as SWITCHES_060
 
 _LOGGER = logging.getLogger(__name__)
 
 MODEL_SWITCHES_MAP = {
-    "cgk_025v3l": SWITCHES_025,
-    "cgk_030v3l": SWITCHES_030,
-    "cgk_040v3l": SWITCHES_040,
     "cgk_050v3l": SWITCHES_050,
-    "cgk_060v3l": SWITCHES_060,
 }
 
 

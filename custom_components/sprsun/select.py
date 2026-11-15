@@ -8,20 +8,12 @@ from .const import DOMAIN
 from .coordinator import SprsunCoordinator
 
 # Importy selectów modelowych
-from .models.CGK025V3L.selects import ENTITIES as SELECTS_025
-from .models.CGK030V3L.selects import ENTITIES as SELECTS_030
-from .models.CGK040V3L.selects import ENTITIES as SELECTS_040
 from .models.CGK050V3L.selects import ENTITIES as SELECTS_050
-from .models.CGK060V3L.selects import ENTITIES as SELECTS_060
 
 _LOGGER = logging.getLogger(__name__)
 
 MODEL_SELECTS_MAP = {
-    "cgk_025v3l": SELECTS_025,
-    "cgk_030v3l": SELECTS_030,
-    "cgk_040v3l": SELECTS_040,
     "cgk_050v3l": SELECTS_050,
-    "cgk_060v3l": SELECTS_060,
 }
 
 
