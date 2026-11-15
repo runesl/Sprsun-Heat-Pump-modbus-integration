@@ -177,7 +177,7 @@ class HeatPumpModbusClient:
                 _LOGGER.error("Modbus error writing register %s: %s", address, err)
                 return False
 
-            if hasattr(rr, "isError") and rr.isError():
+            if rr is None or (hasattr(rr, "isError") and rr.isError()):
                 _LOGGER.error("Modbus error response writing register %s: %s", address, rr)
                 return False
 

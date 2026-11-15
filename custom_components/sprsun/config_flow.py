@@ -13,6 +13,7 @@ from .const import (
     CONF_PORT,
     CONF_UNIT_ID,
     CONF_SCAN_INTERVAL,
+    CONF_DHW_COMPRESSOR_LIMIT,
     CONF_MODEL,
     DEFAULT_PORT,
     DEFAULT_UNIT_ID,
@@ -69,6 +70,7 @@ class SprsunConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     }
                 )
                 options[CONF_SCAN_INTERVAL] = user_input[CONF_SCAN_INTERVAL]
+                options[CONF_DHW_COMPRESSOR_LIMIT] = user_input[CONF_DHW_COMPRESSOR_LIMIT]
                 if entry is not None:
                     return self.async_update_reload_and_abort(
                         entry, data=data, options=options
@@ -84,6 +86,13 @@ class SprsunConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         defaults = {**data, CONF_SCAN_INTERVAL: scan_interval, **(user_input or {})}
         fields = {
+            vol.Required(
+                CONF_DHW_COMPRESSOR_LIMIT,
+                default=(user_input or {}).get(
+                    CONF_DHW_COMPRESSOR_LIMIT,
+                    options.get(CONF_DHW_COMPRESSOR_LIMIT, False),
+                ),
+            ): selector.BooleanSelector(),
             vol.Required(
                 CONF_HOST, default=defaults.get(CONF_HOST, "")
             ): selector.TextSelector(

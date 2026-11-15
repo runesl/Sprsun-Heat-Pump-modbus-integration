@@ -9,6 +9,7 @@
           "port": "Modbus TCP-port",
           "unit_id": "Pumpens adresse (Unit ID / Slave ID)",
           "scan_interval": "Forespørgselsinterval [s]",
+          "dhw_compressor_limit": "Begræns kompressor til 20 rps under brugsvandsopvarmning over 38 °C (gendan sætpunkter ved 38 °C eller lavere)",
           "model": "Pumpemodel"
         }
       },
@@ -19,7 +20,8 @@
           "host": "Pumpens IP-adresse",
           "port": "Modbus TCP-port",
           "unit_id": "Pumpens adresse (Unit ID / Slave ID)",
-          "scan_interval": "Forespørgselsinterval [s]"
+          "scan_interval": "Forespørgselsinterval [s]",
+          "dhw_compressor_limit": "Begræns kompressor til 20 rps under brugsvandsopvarmning over 38 °C (gendan sætpunkter ved 38 °C eller lavere)"
         }
       }
     },

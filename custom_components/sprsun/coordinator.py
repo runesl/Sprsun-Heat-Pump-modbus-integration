@@ -8,6 +8,7 @@ from homeassistant.helpers.update_coordinator import (
 )
 
 from .const import DOMAIN, DEFAULT_SCAN_INTERVAL
+from .dhw_compressor import WORK_MODE_REGISTER
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -22,12 +23,14 @@ class SprsunCoordinator(DataUpdateCoordinator):
         entry_id: str,
         model,
         scan_interval: int,
+        dhw_compressor=None,
     ) -> None:
 
         self.hass = hass
         self.client = client
         self.entry_id = entry_id
         self.model = model
+        self.dhw_compressor = dhw_compressor
 
         # holding registers: key -> int
         self.data: dict[int, int] = {}
@@ -63,7 +66,7 @@ class SprsunCoordinator(DataUpdateCoordinator):
             for start in range(0, MAX_REGISTER, BLOCK_SIZE):
                 count = min(BLOCK_SIZE, MAX_REGISTER - start)
                 regs = await self.client.read_holding_registers(start, count)
-                if regs is None:
+                if regs is None or len(regs) != count:
                     raise UpdateFailed(
                         f"No data from read_holding_registers for block {start}"
                     )
@@ -103,14 +106,24 @@ class SprsunCoordinator(DataUpdateCoordinator):
                 for start in range(0, DISCRETE_MAX, DISCRETE_BLOCK):
                     count = min(DISCRETE_BLOCK, DISCRETE_MAX - start)
                     chunk = await self.client.read_discrete_inputs(start, count)
-                    if chunk:
-                        bits.extend(chunk)
+                    if chunk is None or len(chunk) < count:
+                        raise ValueError(f"Incomplete discrete input block {start}")
+                    bits.extend(chunk[:count])
 
                 self.data_discrete = [[b] for b in bits]
 
             except Exception as err:
                 _LOGGER.warning("Error reading discrete inputs: %s", err)
                 self.data_discrete = None
+
+            if self.dhw_compressor is not None:
+                work_mode = new_data.get(WORK_MODE_REGISTER)
+                dhw_active = (
+                    work_mode == 2
+                    if work_mode in (0, 1, 2)
+                    else None
+                )
+                await self.dhw_compressor.async_update(new_data, dhw_active)
 
             # save new holdings to self.data
             self.data = new_data

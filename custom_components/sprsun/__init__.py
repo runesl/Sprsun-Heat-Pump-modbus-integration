@@ -6,6 +6,7 @@ from typing import Any
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
+from homeassistant.helpers.storage import Store
 
 from .const import (
     DOMAIN,
@@ -15,11 +16,13 @@ from .const import (
     CONF_UNIT_ID,
     CONF_MODEL,
     CONF_SCAN_INTERVAL,
+    CONF_DHW_COMPRESSOR_LIMIT,
     DEFAULT_SCAN_INTERVAL,
 )
 
 from .modbus_client import HeatPumpModbusClient
 from .coordinator import SprsunCoordinator
+from .dhw_compressor import DhwCompressorOverride
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -50,6 +53,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     # Create Modbus client
     client = HeatPumpModbusClient(host, port, unit_id)
+    dhw_compressor = DhwCompressorOverride(
+        client,
+        Store(hass, 1, f"{DOMAIN}.{entry.entry_id}.dhw_compressor"),
+        entry.options.get(CONF_DHW_COMPRESSOR_LIMIT, False),
+    )
+    await dhw_compressor.async_load()
 
     # Create coordinator
     coordinator = SprsunCoordinator(
@@ -58,6 +67,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         entry.entry_id,
         model,
         scan_interval,
+        dhw_compressor=dhw_compressor,
     )
 
     # First bulk read

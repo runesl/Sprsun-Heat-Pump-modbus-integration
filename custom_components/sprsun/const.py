@@ -4,6 +4,7 @@ CONF_HOST = "host"
 CONF_PORT = "port"
 CONF_UNIT_ID = "unit_id"
 CONF_SCAN_INTERVAL = "scan_interval"
+CONF_DHW_COMPRESSOR_LIMIT = "dhw_compressor_limit"
 CONF_MODEL = "model"
 
 DEFAULT_PORT = 502

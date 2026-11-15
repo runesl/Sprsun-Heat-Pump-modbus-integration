@@ -105,6 +105,37 @@ In Home Assistant UI:
 
 Logging and debugging:
 
+### Optional DHW compressor limit (CGK050V3L)
+
+Enable the compressor limit during setup or through **Reconfigure** (disabled by
+default). While `work_mode` (holding register 215) is 2 (DHW) and the DHW
+temperature (register 195, tenths of a degree Celsius) is above 38 C, the
+temperature-dependent compressor setpoints in registers 116, 121, 126, 131, 136,
+141, 146, 151, 156 and 161 are set to raw value 200 (20 rps, not 20 rpm).
+This changes the setpoint curve, not the measured compressor speed.
+
+All ten original values are saved in Home Assistant storage before any write.
+They are restored when DHW temperature falls to 38 C or below, when `work_mode`
+changes to 0 (cooling) or 1 (heating), or when the option is disabled and the
+integration reloads. If the temperature rises above 38 C again during DHW,
+the limit is applied again, saving the then-current setpoints.
+Writes are read back for verification;
+failed operations are retried on subsequent successful polling cycles.
+Missing or unknown work mode never triggers restoration. Invalid or missing DHW
+temperature leaves the current settings unchanged during DHW. The three-way valve
+is not used to control this feature. Do not manually adjust these
+setpoints while the override is active: restoration uses the saved originals.
+
+On startup or integration reload, any saved originals are restored at the first
+successful polling cycle if DHW is no longer active or the temperature is at or
+below 38 C. If DHW is still active above 38 C,
+the limit continues. Unknown work mode
+does not trigger restoration. Failed restoration is retried without discarding
+the backup.
+Restoration requires Home Assistant to be running with a working Modbus connection;
+while it is offline, the pump keeps the last written settings. Keep the
+integration's storage and configuration until restoration has completed.
+
 The integration uses the logger name homeassistant.components.sprsun (the integration domain).
 
 You can increase logging level in configuration.yaml:

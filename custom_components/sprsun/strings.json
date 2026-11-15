@@ -9,6 +9,7 @@
           "port": "Modbus TCP port",
           "unit_id": "Unit ID (Modbus address)",
           "scan_interval": "Polling interval (seconds)",
+          "dhw_compressor_limit": "Limit compressor to 20 rps during DHW heating above 38 C (restore setpoints at 38 C or below)",
           "model": "Pump model"
         }
       },
@@ -19,7 +20,8 @@
           "host": "Heat-pump IP address",
           "port": "Modbus TCP port",
           "unit_id": "Unit ID (Modbus address)",
-          "scan_interval": "Polling interval (seconds)"
+          "scan_interval": "Polling interval (seconds)",
+          "dhw_compressor_limit": "Limit compressor to 20 rps during DHW heating above 38 C (restore setpoints at 38 C or below)"
         }
       }
     },

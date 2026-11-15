@@ -120,7 +120,7 @@ ENTITIES = [
         "icon_off": "mdi:bathtub-outline",
     },
     {
-        "name": "Automatisk skift mellem opvarmning og køling",
+        "name": "Automatisk delta-T styring vha. pumpe-hastighed (PWM)",
         "address": 47,
         "command_on": 1,
         "command_off": 0,

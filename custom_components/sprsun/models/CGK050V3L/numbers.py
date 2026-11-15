@@ -643,10 +643,11 @@ ENTITIES = [
     {
         "name": "Målrettet kompressorhastighed under afrimning",
         "register": 81,
-        "min": 30,
-        "max": 120,
+        "min": 300,
+        "max": 1200,
         "step": 1,
-        "unit": "hz",
+        "scale": 0.1,
+        "unit": "rps",
         "icon": "mdi:snowflake-melt",
     },
     {
