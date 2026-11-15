@@ -316,6 +316,48 @@ class DhwCompressorTests(unittest.IsolatedAsyncioTestCase):
             self.assertIsNone(coordinator.data_discrete)
             self.assertEqual(self.disk, {})
 
+    async def test_incomplete_coil_blocks_are_discarded_and_recover(self):
+        for failed_address in (0, 120):
+            for failure in ("missing", "empty", "short"):
+                with self.subTest(address=failed_address, failure=failure):
+                    await self.update(True)
+                    coordinator = self.make_coordinator(1)
+                    coordinator.data_coils = {0: True, 120: True}
+
+                    def read_coils(address, count):
+                        if address != failed_address:
+                            return [True] * count
+                        if failure == "missing":
+                            return None
+                        return [True] * (count - 1 if failure == "short" else 0)
+
+                    self.client.read_coils.side_effect = read_coils
+                    with self.assertLogs("test.coordinator", level="WARNING"):
+                        data = await coordinator._async_update_data()
+                    self.assertEqual(coordinator.data_coils, {})
+                    self.assertEqual(data[dhw.WORK_MODE_REGISTER], 1)
+                    self.assertEqual(len(coordinator.data_discrete), 200)
+                    self.assertEqual(self.hardware, self.original)
+                    self.assertEqual(self.disk, {})
+
+                    self.client.read_coils.side_effect = (
+                        lambda address, count: [address == 120] * count
+                    )
+                    await coordinator._async_update_data()
+                    self.assertEqual(coordinator.data_coils, {
+                        address: address >= 120 for address in range(200)
+                    })
+
+    async def test_coil_block_padding_does_not_shift_addresses(self):
+        coordinator = self.make_coordinator(1)
+        self.client.read_coils.side_effect = lambda address, count: [
+            (address + offset) % 3 == 0 for offset in range(count)
+        ] + [True] * 8
+        await coordinator._async_update_data()
+        self.assertEqual(coordinator.data_coils, {
+            address: address % 3 == 0 for address in range(200)
+        })
+
     async def test_unknown_work_mode_neither_applies_nor_restores(self):
         for mode in (3, 65535):
             coordinator = self.make_coordinator(mode)

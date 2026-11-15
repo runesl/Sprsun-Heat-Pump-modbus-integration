@@ -85,8 +85,9 @@ class SprsunCoordinator(DataUpdateCoordinator):
                 for start in range(0, COIL_MAX, COIL_BLOCK):
                     count = min(COIL_BLOCK, COIL_MAX - start)
                     chunk = await self.client.read_coils(start, count)
-                    if chunk:
-                        coil_bits.extend(chunk)
+                    if chunk is None or len(chunk) < count:
+                        raise ValueError(f"Incomplete coil block {start}")
+                    coil_bits.extend(chunk[:count])
 
                 # NEW: map index -> bool
                 self.data_coils = {idx: coil_bits[idx] for idx in range(len(coil_bits))}
