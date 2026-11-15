@@ -101,6 +101,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "d07",
         "name": "VVB aktiv (3-vejs ventil)",
+        "shortname": "dhw_valve_active",
         "address": 11,
         "index": 0,
         "icon": "mdi:valve-open",
@@ -116,5 +117,20 @@ BINARY_SENSORS = [
         "icon_on": "mdi:pump",
         "icon_off": "mdi:pump-off",
     },
-
+    {
+        "name": "Kompressor",
+        "shortname": "compressor_running",
+        "address": 179,
+        "index": 0,
+        "icon_on": "mdi:engine",
+        "icon_off": "mdi:engine-off",
+    },
+    {
+        "name": "Ventilator",
+        "shortname": "fan_running",
+        "address": 180,
+        "index": 0,
+        "icon_on": "mdi:fan",
+        "icon_off": "mdi:fan-off",
+    },
 ]

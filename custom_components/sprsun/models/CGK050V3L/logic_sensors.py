@@ -10,6 +10,7 @@ from homeassistant.helpers.event import (
 )
 
 from ...const import DOMAIN
+from ...binary_sensor import resolve_source_entity_id
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -109,6 +110,9 @@ class SprsunBaseTimerSensor(RestoreEntity, SensorEntity):
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
 
+        self._source_entity_id = resolve_source_entity_id(
+            self.hass, self._model, self._source_entity_id
+        )
         last_state = await self.async_get_last_state()
         if last_state:
             self._seconds = _parse_float(
@@ -180,7 +184,7 @@ class SprsunCompressorRuntimeSensor(SprsunBaseTimerSensor):
         super().__init__(
             name,
             unique_id,
-            f"binary_sensor.sprsun_{model}_sprezarka",
+            f"binary_sensor.sprsun_{model}_compressor_running",
             reset_mode,
             entry_id,
             model,
@@ -200,7 +204,7 @@ class SprsunFanRuntimeSensor(SprsunBaseTimerSensor):
         super().__init__(
             name,
             unique_id,
-            f"binary_sensor.sprsun_{model}_wentylator",
+            f"binary_sensor.sprsun_{model}_fan_running",
             reset_mode,
             entry_id,
             model,
@@ -326,7 +330,7 @@ class SprsunCompressorStartCounter(SprsunBaseCounterSensor):
     def __init__(self, name, unique_id, reset_mode, entry_id, model):
         super().__init__(name, unique_id, reset_mode, entry_id, model)
         self._unsub = None
-        self._compressor_entity = f"binary_sensor.sprsun_{model}_sprezarka"
+        self._compressor_entity = f"binary_sensor.sprsun_{model}_compressor_running"
 
     @property
     def icon(self):
@@ -387,8 +391,8 @@ class SprsunDefrostCounter(SprsunBaseCounterSensor):
         self._unsub_interval = None
         self._condition_active = False
 
-        self._compressor_entity = f"binary_sensor.sprsun_{model}_sprezarka"
-        self._fan_entity = f"binary_sensor.sprsun_{model}_wentylator"
+        self._compressor_entity = f"binary_sensor.sprsun_{model}_compressor_running"
+        self._fan_entity = f"binary_sensor.sprsun_{model}_fan_running"
 
     @property
     def icon(self):

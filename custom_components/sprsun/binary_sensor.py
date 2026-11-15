@@ -4,6 +4,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import slugify
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.helpers import entity_registry as er
 
 from .const import DOMAIN
 from .coordinator import SprsunCoordinator
@@ -16,6 +17,18 @@ _LOGGER = logging.getLogger(__name__)
 MODEL_BINARY_MAP = {
     "cgk_050v3l": BINARY_050,
 }
+
+
+def resolve_source_entity_id(hass, model, source_entity_id):
+    """Find a shortnamed source even when HA retains its old entity ID."""
+    for definition in MODEL_BINARY_MAP.get(model, []):
+        shortname = definition.get("shortname")
+        if shortname and source_entity_id == f"binary_sensor.sprsun_{model}_{shortname}":
+            unique_id = f"{DOMAIN}_{model}_binary_{definition['address']}"
+            return er.async_get(hass).async_get_entity_id(
+                "binary_sensor", DOMAIN, unique_id
+            ) or source_entity_id
+    return source_entity_id
 
 
 async def async_setup_entry(
@@ -54,7 +67,8 @@ class SprsunBinarySensor(BinarySensorEntity):
         self._attr_name = definition["name"]
         self._attr_unique_id = f"{DOMAIN}_{model}_binary_{self._address}"
 
-        slug = slugify(f"sprsun_{model}_{definition['name']}")
+        shortname = definition.get("shortname", definition["name"])
+        slug = slugify(f"sprsun_{model}_{shortname}")
         self.entity_id = f"binary_sensor.{slug}"
 
         self._attr_device_class = definition.get("device_class")

@@ -1,15 +1,24 @@
 import logging
+from datetime import datetime
+
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import slugify
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.helpers.event import (
+    async_track_state_change_event,
+    async_track_time_change,
+)
+from homeassistant.helpers.restore_state import RestoreEntity
 
 from .const import DOMAIN
 from .coordinator import SprsunCoordinator
+from .binary_sensor import resolve_source_entity_id
 
 # Importy sensorów rejestrowych
 from .models.CGK050V3L.sensors import SENSORS as SENSORS_050
+from .models.CGK050V3L.sensors import COUNTERS as COUNTERS_050
 
 # Importy logic sensors
 from .models.CGK050V3L.logic_sensors import *
@@ -18,6 +27,10 @@ _LOGGER = logging.getLogger(__name__)
 
 MODEL_SENSORS_MAP = {
     "cgk_050v3l": SENSORS_050,
+}
+
+MODEL_COUNTERS_MAP = {
+    "cgk_050v3l": COUNTERS_050,
 }
 
 MODEL_LOGIC_MAP = {
@@ -59,6 +72,11 @@ async def async_setup_entry(
                 definition
             )
         )
+
+    entities.extend(
+        SprsunCounterSensor(hass, entry.entry_id, model, definition)
+        for definition in MODEL_COUNTERS_MAP.get(model, [])
+    )
 
     # LOGIC SENSORS
     logic = MODEL_LOGIC_MAP[model]
@@ -177,4 +195,127 @@ class SprsunGenericSensor(SensorEntity):
             "name": f"Pompa ciepła Sprsun {self._model.upper().replace('_', '-')}",
             "manufacturer": "Sprsun",
             "model": self._model.upper().replace('_', '-'),
+        }
+
+
+class SprsunCounterSensor(RestoreEntity, SensorEntity):
+    """Read-only counter based on the integration's binary signals."""
+
+    _attr_should_poll = False
+
+    def __init__(self, hass, entry_id, model, definition):
+        self.hass = hass
+        self._entry_id = entry_id
+        self._model = model
+        self._reset = definition.get("reset")
+        self._source_sensor = definition.get("source_sensor")
+        self._source_compressor = definition.get("source_compressor")
+        self._source_fan = definition.get("source_fan")
+        for attribute in ("_source_sensor", "_source_compressor", "_source_fan"):
+            source = getattr(self, attribute)
+            if source:
+                setattr(self, attribute, source.replace("<model>", model))
+
+        self._value = 0
+        self._defrost_active = False
+        self._defrost_start = None
+        self._unsub_state = None
+        self._unsub_defrost = None
+        self._unsub_reset = None
+
+        self._attr_name = definition["name"]
+        self._attr_unique_id = f"{DOMAIN}_{model}_counter_{definition['unique_id']}"
+        self.entity_id = f"sensor.sprsun_{model}_{definition['unique_id']}"
+        self._attr_icon = definition.get("icon")
+        self._attr_state_class = "total_increasing" if self._reset is None else None
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        for attribute in ("_source_sensor", "_source_compressor", "_source_fan"):
+            setattr(
+                self, attribute,
+                resolve_source_entity_id(self.hass, self._model, getattr(self, attribute)),
+            )
+
+        last_state = await self.async_get_last_state()
+        if last_state is not None:
+            try:
+                self._value = int(float(last_state.state))
+            except (TypeError, ValueError, OverflowError):
+                self._value = 0
+        self.async_write_ha_state()
+
+        if self._source_sensor:
+            self._unsub_state = async_track_state_change_event(
+                self.hass, [self._source_sensor], self._handle_state_change
+            )
+        if self._source_compressor and self._source_fan:
+            self._unsub_defrost = async_track_state_change_event(
+                self.hass,
+                [self._source_compressor, self._source_fan],
+                self._handle_defrost_state_change,
+            )
+        if self._reset in ("daily", "monthly", "yearly"):
+            self._unsub_reset = async_track_time_change(
+                self.hass, self._handle_reset_time_event,
+                hour=0, minute=0, second=0,
+            )
+
+    async def async_will_remove_from_hass(self):
+        for attribute in ("_unsub_state", "_unsub_defrost", "_unsub_reset"):
+            unsubscribe = getattr(self, attribute)
+            if unsubscribe:
+                unsubscribe()
+                setattr(self, attribute, None)
+        await super().async_will_remove_from_hass()
+
+    @property
+    def native_value(self):
+        return self._value
+
+    async def _handle_reset_time_event(self, now):
+        if (
+            self._reset == "daily"
+            or (self._reset == "monthly" and now.day == 1)
+            or (self._reset == "yearly" and now.month == 1 and now.day == 1)
+        ):
+            self._value = 0
+            self.async_write_ha_state()
+
+    async def _handle_state_change(self, event):
+        old = event.data.get("old_state")
+        new = event.data.get("new_state")
+        if old and new and old.state == "off" and new.state == "on":
+            self._value += 1
+            self.async_write_ha_state()
+
+    async def _handle_defrost_state_change(self, event):
+        """Count a completed compressor-ON/fan-OFF period of at least 60 seconds."""
+        now = datetime.now()
+        compressor = self.hass.states.get(self._source_compressor)
+        fan = self.hass.states.get(self._source_fan)
+        if not compressor or not fan:
+            return
+        if compressor.state == "on" and fan.state == "off":
+            if not self._defrost_active:
+                self._defrost_active = True
+                self._defrost_start = now
+            return
+        if (
+            self._defrost_active
+            and self._defrost_start
+            and (now - self._defrost_start).total_seconds() >= 60
+        ):
+            self._value += 1
+            self.async_write_ha_state()
+        self._defrost_active = False
+        self._defrost_start = None
+
+    @property
+    def device_info(self):
+        return {
+            "identifiers": {(DOMAIN, self._entry_id)},
+            "name": f"Sprsun varmepumpe {self._model.upper().replace('_', '-')}",
+            "manufacturer": "Sprsun",
+            "model": self._model.upper().replace("_", "-"),
         }
