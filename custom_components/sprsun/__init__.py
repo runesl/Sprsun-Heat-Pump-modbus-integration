@@ -37,7 +37,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     port: int = int(entry.data[CONF_PORT])
     unit_id: int = int(entry.data[CONF_UNIT_ID])
     model: str = entry.data[CONF_MODEL]
-    scan_interval: int = int(entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL))
+    scan_interval: int = int(entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL))
 
     _LOGGER.debug(
         "Initializing Sprsun Modbus: host=%s port=%s unit_id=%s model=%s scan=%s",

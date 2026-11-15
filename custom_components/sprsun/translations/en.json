@@ -2,17 +2,11 @@
   "config": {
     "step": {
       "user": {
-        "title": "Sunsun heat-pump connection type",
-        "description": "Choose whether to connect via Ethernet (TCP) or through a serial/USB port (RTU)."
-      },
-      "details": {
-        "title": "Connection details",
-        "description": "Fill in the data appropriate for the selected connection type.",
+        "title": "Sprsun heat-pump setup",
+        "description": "Enter the connection settings, polling interval, and pump model.",
         "data": {
           "host": "Heat-pump IP address",
           "port": "Modbus TCP port",
-          "serial_port": "Serial port (e.g. /dev/ttyUSB0)",
-          "baudrate": "Baud rate (bps)",
           "unit_id": "Unit ID / Slave ID",
           "scan_interval": "Polling interval (s)",
           "model": "Pump model"
@@ -20,11 +14,12 @@
       },
       "reconfigure": {
         "title": "Update Sprsun heat-pump connection",
-        "description": "Update the IP address, port, or Unit ID if the EW11 device moved to a new address. Historical data is preserved.",
+        "description": "Update the IP address, port, Unit ID, or polling interval. Historical data is preserved.",
         "data": {
           "host": "Heat-pump IP address",
           "port": "Modbus TCP port",
-          "unit_id": "Unit ID / Slave ID"
+          "unit_id": "Unit ID / Slave ID",
+          "scan_interval": "Polling interval (s)"
         }
       }
     },
@@ -32,22 +27,8 @@
       "host_required": "IP address is required.",
       "invalid_port": "Port must be a number between 1 and 65555.",
       "invalid_unit_id": "Unit ID must be between 1 and 255.",
-      "min_10": "Minimum value is 5 seconds.",
+      "min_5": "Minimum value is 5 seconds.",
       "already_configured": "This connection already exists."
-    }
-  },
-  "options": {
-    "step": {
-      "user": {
-        "title": "Sunsun integration options",
-        "description": "Adjust polling interval.",
-        "data": {
-          "scan_interval": "Polling interval (seconds)"
-        }
-      }
-    },
-    "error": {
-      "min_10": "Minimum value is 10 seconds."
     }
   }
 }
