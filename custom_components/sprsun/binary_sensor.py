@@ -78,8 +78,6 @@ class SprsunBinarySensor(BinarySensorEntity):
 
         self._mapping = definition.get("mapping", {})
 
-        self._attr_available = True
-
     async def async_added_to_hass(self):
         """Aktualizacja przy każdej zmianie koordynatora."""
         self.async_on_remove(
@@ -99,16 +97,20 @@ class SprsunBinarySensor(BinarySensorEntity):
     # ---------------------------------------------------------
 
     @property
+    def available(self):
+        return self.coordinator.last_update_success and self.is_on is not None
+
+    @property
     def is_on(self):
         """Stan z discrete inputs."""
         bits = self.coordinator.data_discrete
         if bits is None:
-            return False
+            return None
 
         try:
             return bool(bits[self._address][self._index])
-        except Exception:
-            return False
+        except (IndexError, TypeError):
+            return None
 
     # ---------------------------------------------------------
     # DODATKOWE ATRYBUTY

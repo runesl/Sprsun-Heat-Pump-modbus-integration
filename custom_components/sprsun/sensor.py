@@ -294,7 +294,14 @@ class SprsunCounterSensor(RestoreEntity, SensorEntity):
         now = datetime.now()
         compressor = self.hass.states.get(self._source_compressor)
         fan = self.hass.states.get(self._source_fan)
-        if not compressor or not fan:
+        if (
+            not compressor
+            or not fan
+            or compressor.state not in ("on", "off")
+            or fan.state not in ("on", "off")
+        ):
+            self._defrost_active = False
+            self._defrost_start = None
             return
         if compressor.state == "on" and fan.state == "off":
             if not self._defrost_active:
