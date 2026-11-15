@@ -419,8 +419,16 @@ ENTITIES = [
         "step": 1,
     },
     {
-        "name": "Forsinkelse før kompressorstart",
+        "name": "Electric heating start delay",
         "register": 13,
+        "description": (
+            "Comp.delay: The delay time to start the electric heating after the "
+            "compressor starts, the default is 50 minutes.\n\n"
+            "Source: SPRSUN, Function description of DC inverter heat pump, "
+            "Heater control, p. 5. "
+            "https://sprsun.nl/wp-content/uploads/2022/07/"
+            "Function-description-of-DC-inverter-heat-pump.docx.pdf"
+        ),
         "min": 0,
         "max": 999,
         "step": 1,
@@ -433,7 +441,7 @@ ENTITIES = [
         "min": 10,
         "max": 30,
         "step": 1,
-        "unit": "min",
+        "unit": "°C",
         "icon": "mdi:timer-edit",
     },
     {
@@ -662,9 +670,11 @@ ENTITIES = [
     {
         "name": "Fordampertemperatur hvor afrimning starter",
         "register": 83,
-        "min": -20,
-        "max": 30,
+        "min": -200,
+        "max": 300,
         "step": 1,
+        "scale": 0.1,
+        "signed": True,
         "unit": "°C",
         "icon": "mdi:snowflake-melt",
     },
@@ -672,26 +682,30 @@ ENTITIES = [
         "name": "Fordampertemperatur hvor afrimning slutter",
         "register": 84,
         "min": 0,
-        "max": 30,
+        "max": 300,
         "step": 1,
+        "scale": 0.1,
         "unit": "°C",
         "icon": "mdi:snowflake-melt",
     },
     {
         "name": "ude for start af afrimning",
         "register": 85,
-        "min": -30,
-        "max": 30,
+        "min": -300,
+        "max": 300,
         "step": 1,
+        "scale": 0.1,
+        "signed": True,
         "unit": "°C",
         "icon": "mdi:snowflake-melt",
     },
     {
         "name": "Min. ΔT mellem luft og fordamper krævet for afrimning",
         "register": 86,
-        "min": 1,
-        "max": 30,
+        "min": 10,
+        "max": 300,
         "step": 1,
+        "scale": 0.1,
         "unit": "°C",
         "icon": "mdi:snowflake-melt",
     },
@@ -732,9 +746,9 @@ ENTITIES = [
         "icon": "mdi:snowflake-melt",
     },
     {
-        "name": "Tvungen afrimning hver",
+        "name": "Automatisk afrimning hver",
         "register": 91,
-        "min": 0,
+        "min": 1,
         "max": 999,
         "step": 1,
         "unit": "min",

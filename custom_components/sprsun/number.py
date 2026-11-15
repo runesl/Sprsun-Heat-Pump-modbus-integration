@@ -89,6 +89,7 @@ class SprsunNumberEntity(NumberEntity):
 
         self.entity_id = f"number.{slug}"
         self._scale = definition.get("scale", 1.0)
+        self._signed = definition.get("signed", False)
         self._attr_native_min_value = definition["min"] * self._scale
         self._attr_native_max_value = definition["max"] * self._scale
         self._attr_native_step = definition["step"] * self._scale
@@ -109,12 +110,21 @@ class SprsunNumberEntity(NumberEntity):
     def native_value(self):
         val = self.coordinator.data.get(self._register)
         if val is not None:
+            if self._signed and val > 32767:
+                val -= 65536
             return val * self._scale
         return None
 
+    @property
+    def extra_state_attributes(self):
+        description = self._def.get("description")
+        return {"description": description} if description else None
+
     async def async_set_native_value(self, value: float) -> None:
         try:
-            raw_value = int(value / self._scale)
+            raw_value = round(value / self._scale)
+            if self._signed:
+                raw_value &= 0xFFFF
             await self.coordinator.client.write_register(self._register, raw_value)
             await self.coordinator.async_request_refresh()
         except Exception as err:  # pylint: disable=broad-except
