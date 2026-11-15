@@ -1,7 +1,7 @@
 """Tests for stable IDs of the binary signals used by counters."""
 
 import ast
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from types import SimpleNamespace
 import unittest
@@ -10,6 +10,7 @@ from unittest.mock import AsyncMock, Mock, patch
 
 ROOT = Path(__file__).resolve().parents[1] / "custom_components/sprsun"
 MODEL = "cgk_050v3l"
+NOW = datetime(2026, 11, 15, 12, tzinfo=timezone.utc)
 
 
 def definitions(filename, variable):
@@ -73,6 +74,10 @@ class BinarySourceTests(unittest.IsolatedAsyncioTestCase):
             "RestoreEntity": FakeRestoreEntity,
             "HomeAssistant": object,
             "datetime": datetime,
+            "dt_util": SimpleNamespace(
+                now=lambda: NOW,
+                as_local=lambda value: value.astimezone(timezone.utc),
+            ),
             "async_track_state_change_event": Mock(return_value=lambda: None),
             "async_track_time_change": Mock(return_value=lambda: None),
         })
@@ -335,15 +340,121 @@ class BinarySourceTests(unittest.IsolatedAsyncioTestCase):
         }):
             counter = self.counter_class(object(), "entry", MODEL, definition)
             counter.async_get_last_state = AsyncMock(
-                return_value=SimpleNamespace(state="4")
+                return_value=SimpleNamespace(
+                    state="4", attributes={}, last_updated=NOW
+                )
             )
             await counter.async_added_to_hass()
             self.assertEqual(counter.native_value, 4)
-            await counter._handle_reset_time_event(datetime(2026, 11, 16))
+            await counter._handle_reset_time_event(
+                datetime(2026, 11, 16, tzinfo=timezone.utc)
+            )
             self.assertEqual(counter.native_value, 0)
             await counter.async_will_remove_from_hass()
             unsubscribe_state.assert_called_once_with()
             unsubscribe_reset.assert_called_once_with()
+
+    async def test_restore_keeps_only_counts_from_the_current_period(self):
+        cases = (
+            ("daily", "2026-11-14", "2026-11-14", 0),
+            ("daily", "2026-11-15", "2026-11-15", 7),
+            ("monthly", "2026-10-31", "2026-10", 0),
+            ("monthly", "2026-11-01", "2026-11", 7),
+            ("monthly", "2025-11-15", "2025-11", 0),
+            ("yearly", "2025-12-31", "2025", 0),
+            ("yearly", "2026-01-01", "2026", 7),
+            (None, "2025-11-15", None, 7),
+        )
+        for reset, saved_date, period, expected in cases:
+            for legacy in (False, True):
+                with self.subTest(reset=reset, saved_date=saved_date, legacy=legacy):
+                    counter = self.counter_class(object(), "entry", MODEL, {
+                        "name": "Counter", "unique_id": "test", "reset": reset,
+                    })
+                    counter.async_get_last_state = AsyncMock(
+                        return_value=SimpleNamespace(
+                            state="7",
+                            attributes={} if legacy else {"counter_period": period},
+                            last_updated=(
+                                datetime.fromisoformat(saved_date).replace(
+                                    tzinfo=timezone.utc
+                                ) if legacy else NOW
+                            ),
+                        )
+                    )
+                    await counter.async_added_to_hass()
+                    self.assertEqual(counter.native_value, expected)
+
+    async def test_legacy_restore_uses_home_assistants_local_date(self):
+        local_tz = timezone(timedelta(hours=1))
+        local_now = datetime(2026, 11, 16, 0, 30, tzinfo=local_tz)
+        with patch.dict(self.namespace, {"dt_util": SimpleNamespace(
+            now=lambda: local_now,
+            as_local=lambda value: value.astimezone(local_tz),
+        )}):
+            for hour, expected in ((22, 0), (23, 7)):
+                with self.subTest(utc_hour=hour):
+                    counter = self.counter_class(object(), "entry", MODEL, {
+                        "name": "Counter", "unique_id": "test", "reset": "daily",
+                    })
+                    counter.async_get_last_state = AsyncMock(
+                        return_value=SimpleNamespace(
+                            state="7", attributes={},
+                            last_updated=datetime(
+                                2026, 11, 15, hour, 10, tzinfo=timezone.utc
+                            ),
+                        )
+                    )
+                    await counter.async_added_to_hass()
+                    self.assertEqual(counter.native_value, expected)
+
+    async def test_first_event_in_new_period_is_not_erased_by_midnight_reset(self):
+        for reset, next_period in (
+            ("daily", datetime(2026, 11, 16, tzinfo=timezone.utc)),
+            ("monthly", datetime(2026, 12, 1, tzinfo=timezone.utc)),
+            ("yearly", datetime(2027, 1, 1, tzinfo=timezone.utc)),
+        ):
+            for kind in ("start", "defrost"):
+                with self.subTest(reset=reset, kind=kind):
+                    states = {}
+                    hass = SimpleNamespace(states=SimpleNamespace(get=states.get))
+                    counter = self.counter_class(hass, "entry", MODEL, {
+                        "name": "Counter", "unique_id": "test", "reset": reset,
+                    })
+                    await counter.async_added_to_hass()
+                    counter._value = 7
+                    with patch.dict(self.namespace, {"dt_util": SimpleNamespace(
+                        now=lambda: next_period,
+                        as_local=lambda value: value.astimezone(timezone.utc),
+                    )}):
+                        if kind == "start":
+                            await counter._handle_state_change(SimpleNamespace(data={
+                                "old_state": SimpleNamespace(state="off"),
+                                "new_state": SimpleNamespace(state="on"),
+                            }))
+                        else:
+                            counter._source_compressor = "binary_sensor.compressor"
+                            counter._source_fan = "binary_sensor.fan"
+                            states[counter._source_compressor] = SimpleNamespace(state="on")
+                            states[counter._source_fan] = SimpleNamespace(state="on")
+                            counter._defrost_active = True
+                            counter._defrost_start = datetime.now() - timedelta(seconds=61)
+                            await counter._handle_defrost_state_change(None)
+                        self.assertEqual(counter.native_value, 1)
+                        await counter._handle_reset_time_event(next_period)
+                        self.assertEqual(counter.native_value, 1)
+                        restored = self.counter_class(hass, "entry", MODEL, {
+                            "name": "Counter", "unique_id": "test", "reset": reset,
+                        })
+                        restored.async_get_last_state = AsyncMock(
+                            return_value=SimpleNamespace(
+                                state=str(counter.native_value),
+                                attributes=counter.extra_state_attributes,
+                                last_updated=NOW,
+                            )
+                        )
+                        await restored.async_added_to_hass()
+                        self.assertEqual(restored.native_value, 1)
 
     async def test_platform_setup_places_counters_only_in_sensor_domain(self):
         entry = SimpleNamespace(entry_id="entry")

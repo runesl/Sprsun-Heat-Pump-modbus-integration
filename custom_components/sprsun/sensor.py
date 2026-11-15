@@ -5,6 +5,7 @@ from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import slugify
+from homeassistant.util import dt as dt_util
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.event import (
     async_track_state_change_event,
@@ -217,6 +218,7 @@ class SprsunCounterSensor(RestoreEntity, SensorEntity):
                 setattr(self, attribute, source.replace("<model>", model))
 
         self._value = 0
+        self._period = None
         self._defrost_active = False
         self._defrost_start = None
         self._unsub_state = None
@@ -238,11 +240,18 @@ class SprsunCounterSensor(RestoreEntity, SensorEntity):
             )
 
         last_state = await self.async_get_last_state()
+        self._period = self._period_for(dt_util.now())
         if last_state is not None:
             try:
                 self._value = int(float(last_state.state))
             except (TypeError, ValueError, OverflowError):
                 self._value = 0
+            if self._period is not None:
+                restored_period = last_state.attributes.get("counter_period")
+                if restored_period is None:
+                    restored_period = self._period_for(last_state.last_updated)
+                if restored_period != self._period:
+                    self._value = 0
         self.async_write_ha_state()
 
         if self._source_sensor:
@@ -273,19 +282,30 @@ class SprsunCounterSensor(RestoreEntity, SensorEntity):
     def native_value(self):
         return self._value
 
+    @property
+    def extra_state_attributes(self):
+        return {"counter_period": self._period} if self._period is not None else {}
+
+    def _period_for(self, now):
+        date_format = {
+            "daily": "%Y-%m-%d",
+            "monthly": "%Y-%m",
+            "yearly": "%Y",
+        }.get(self._reset)
+        return dt_util.as_local(now).strftime(date_format) if date_format else None
+
     async def _handle_reset_time_event(self, now):
-        if (
-            self._reset == "daily"
-            or (self._reset == "monthly" and now.day == 1)
-            or (self._reset == "yearly" and now.month == 1 and now.day == 1)
-        ):
+        period = self._period_for(now)
+        if period is not None and period != self._period:
             self._value = 0
+            self._period = period
             self.async_write_ha_state()
 
     async def _handle_state_change(self, event):
         old = event.data.get("old_state")
         new = event.data.get("new_state")
         if old and new and old.state == "off" and new.state == "on":
+            await self._handle_reset_time_event(dt_util.now())
             self._value += 1
             self.async_write_ha_state()
 
@@ -313,6 +333,7 @@ class SprsunCounterSensor(RestoreEntity, SensorEntity):
             and self._defrost_start
             and (now - self._defrost_start).total_seconds() >= 60
         ):
+            await self._handle_reset_time_event(dt_util.now())
             self._value += 1
             self.async_write_ha_state()
         self._defrost_active = False
