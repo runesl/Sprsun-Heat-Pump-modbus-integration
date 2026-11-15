@@ -96,9 +96,10 @@ class SprsunNumberEntity(NumberEntity):
         slug = slugify(f"sprsun_{model}_{definition['name']}")
 
         self.entity_id = f"number.{slug}"
-        self._attr_native_min_value = definition["min"]
-        self._attr_native_max_value = definition["max"]
-        self._attr_native_step = definition["step"]
+        self._scale = definition.get("scale", 1.0)
+        self._attr_native_min_value = definition["min"] * self._scale
+        self._attr_native_max_value = definition["max"] * self._scale
+        self._attr_native_step = definition["step"] * self._scale
         self._attr_icon = definition.get("icon")
         self._attr_native_unit_of_measurement = definition.get("unit")
 
@@ -114,11 +115,15 @@ class SprsunNumberEntity(NumberEntity):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get(self._register)
+        val = self.coordinator.data.get(self._register)
+        if val is not None:
+            return val * self._scale
+        return None
 
     async def async_set_native_value(self, value: float) -> None:
         try:
-            await self.coordinator.client.write_register(self._register, int(value))
+            raw_value = int(value / self._scale)
+            await self.coordinator.client.write_register(self._register, raw_value)
             await self.coordinator.async_request_refresh()
         except Exception as err:  # pylint: disable=broad-except
             _LOGGER.error("Error writing number %s: %s", self._attr_name, err)

@@ -136,7 +136,7 @@ async def async_setup_entry(
             fromlist=["SprsunActiveAlarmsSensor"],
         )
         alarm_class = getattr(module, "SprsunActiveAlarmsSensor")
-        entities.append(alarm_class(coordinator.client, entry.entry_id, model))
+        entities.append(alarm_class(coordinator, entry.entry_id, model))
     except Exception as err:
         _LOGGER.error("Failed to load alarm sensor: %s", err)
 

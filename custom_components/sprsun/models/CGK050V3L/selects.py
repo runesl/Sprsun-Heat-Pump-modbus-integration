@@ -1,6 +1,6 @@
 ENTITIES = [
     {
-        "name": "Pumpens driftstilstand",
+        "name": "Driftstilstand",
         "register": 0,
         "options": {
             0: "Køling",
@@ -16,7 +16,7 @@ ENTITIES = [
         "register": 11,
         "options": {
             0: "Kontinuerlig",
-            1: "Ekstern styring",
+            1: "Behovsstyret (PWM)",
             2: "Interval",
         },
         "icon": "mdi:pump",
@@ -51,7 +51,7 @@ ENTITIES = [
         },
     },
     {
-        "name": "Tidsfunktion: Ugedag",
+        "name": "Ugedag",
         "register": 187,
         "options": {
             1: "Mandag",
@@ -63,17 +63,5 @@ ENTITIES = [
             7: "Søndag",
         },
         "icon": "mdi:timer-edit",
-    },
-    {
-        "name": "Netværksindstillinger",
-        "register": 35,
-        "options": {
-            0: "Slave",
-            1: "Master",
-        },
-        "icons": {
-            0: "mdi:upload-network",
-            1: "mdi:download-network",
-        },
     },
 ]

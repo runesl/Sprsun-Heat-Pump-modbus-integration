@@ -121,7 +121,7 @@ class SprsunGenericSelect(SelectEntity):
     # ---------------------------------------------------------
 
     async def async_select_option(self, option: str) -> None:
-        """Write selected option to Modbus register."""}
+        """Write selected option to Modbus register."""
         raw_value = self._reverse_map.get(option)
         if raw_value is None:
             return

@@ -1,5 +1,7 @@
 from homeassistant .components .sensor import SensorEntity
 from ...const import DOMAIN
+import logging
+_LOGGER = logging.getLogger(__name__)
 
 # Mapa alarmów: adres → (kod, opis)
 ALARM_MAP = {
@@ -170,73 +172,73 @@ ALARM_MAP = {
 }
 
 
-class SprsunActiveAlarmsSensor (SensorEntity):
+class SprsunActiveAlarmsSensor(SensorEntity):
     """Sensor zbiorczy pokazujący aktywne alarmy."""
 
     _attr_should_poll = False
     _attr_name = "Aktive alarmer"
 
-    def __init__(self, client, entry_id, model):
-        self ._client = client
-        self ._entry_id = entry_id
-        self ._model = model
-        self ._active = []
-        self ._attr_available = True
+    def __init__(self, coordinator, entry_id, model):
+        self._coordinator = coordinator
+        self._entry_id = entry_id
+        self._model = model
+        self._attr_unique_id = f"sprsun_{model}_active_alarms"
+        self.entity_id = f"sensor.sprsun_{model}_active_alarms"
 
-        self ._attr_unique_id = f"sprsun_{model}_active_alarms"
-        self .entity_id = f"sensor.sprsun_{model}_active_alarms"
+    async def async_added_to_hass(self):
+        self.async_on_remove(
+            self._coordinator.async_add_listener(self.async_write_ha_state)
+        )
 
     @property
     def device_info(self):
         return {
-            "identifiers": {(DOMAIN, self ._entry_id)},
-            "name": f"Sprsun varmepumpe {self ._model .upper().replace('_', '-')}",
+            "identifiers": {(DOMAIN, self._entry_id)},
+            "name": f"Sprsun varmepumpe {self._model.upper().replace('_', '-')}",
             "manufacturer": "Sprsun",
-            "model": self ._model .upper().replace('_', '-'),
+            "model": self._model.upper().replace('_', '-'),
         }
 
     @property
+    def available(self):
+        return self._coordinator.last_update_success and self._coordinator.data_discrete is not None
+
+    @property
+    def _active_alarms(self):
+        active = []
+        if not self._coordinator.data_discrete:
+            return active
+        
+        for address, info in ALARM_MAP.items():
+            if address < len(self._coordinator.data_discrete):
+                # data_discrete er en liste af lister med bools: [[False], [True], ...]
+                if self._coordinator.data_discrete[address][0]:
+                    code, desc = info
+                    active.append(f"{code} – {desc}")
+        return active
+
+    @property
     def icon(self):
-        return "mdi:check-circle"if not self ._active else "mdi:alert-circle"
+        return "mdi:alert-circle" if self._active_alarms else "mdi:check-circle"
 
     @property
     def state(self):
-        if not self ._active:
+        alarms = self._active_alarms
+        if not alarms:
             return "Ingen"
-        return "\n".join(self ._active)
+        return "\n".join(alarms)
 
     @property
     def extra_state_attributes(self):
-        if not self ._active:
+        alarms = self._active_alarms
+        if not alarms:
             return {"beskrivelser": "Ingen"}
 
         return {
             "beskrivelser": {
                 code: desc
                 for code, desc in (
-                    alarm .split(" – ", 1)for alarm in self ._active
+                    alarm.split(" – ", 1) for alarm in alarms
                 )
             }
         }
-
-    async def async_update(self):
-        values = await self ._client .read_discrete_inputs(13, 165)
-
-        if not values:
-            self ._active = []
-            self ._attr_available = False
-            return
-
-        active = []
-
-        for offset, bit_value in enumerate(values):
-            if bit_value == 1:
-                address = 13 + offset
-                alarm = ALARM_MAP .get(address)
-                if alarm:
-                    code, desc = alarm
-                    active .append(f"{code} – {desc}")
-
-        self ._active = active
-        self ._attr_available = True
-        self .async_write_ha_state()

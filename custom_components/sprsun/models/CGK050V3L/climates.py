@@ -515,7 +515,7 @@ ENTITIES = [
     },
     {
         "name": "Opvarmning udendørstemperatur X1",
-        "unique_id": "ogrzewanie_temperatura_zewnetrzna_x1",
+        "unique_id": "heating_ambient_x1",
         "model_path": __file__,
         "data_type": "int16",
         "input_type": "holding",
@@ -548,7 +548,7 @@ ENTITIES = [
     },
     {
         "name": "Opvarmning udendørstemperatur X2",
-        "unique_id": "ogrzewanie_temperatura_zewnetrzna_x2",
+        "unique_id": "heating_ambient_x2",
         "model_path": __file__,
         "data_type": "int16",
         "input_type": "holding",
@@ -581,7 +581,7 @@ ENTITIES = [
     },
     {
         "name": "Opvarmning udendørstemperatur X3",
-        "unique_id": "ogrzewanie_temperatura_zewnetrzna_x3",
+        "unique_id": "heating_ambient_x3",
         "model_path": __file__,
         "data_type": "int16",
         "input_type": "holding",
@@ -614,7 +614,7 @@ ENTITIES = [
     },
     {
         "name": "Opvarmning udendørstemperatur X4",
-        "unique_id": "ogrzewanie_temperatura_zewnetrzna_x4",
+        "unique_id": "heating_ambient_x4",
         "model_path": __file__,
         "data_type": "int16",
         "input_type": "holding",
@@ -647,7 +647,7 @@ ENTITIES = [
     },
     {
         "name": "Opvarmning fremløbstemperatur Y1",
-        "unique_id": "ogrzewanie_temperatura_zasilania_y1",
+        "unique_id": "heating_water_y1",
         "model_path": __file__,
         "data_type": "uint16",
         "input_type": "holding",
@@ -680,7 +680,7 @@ ENTITIES = [
     },
     {
         "name": "Opvarmning fremløbstemperatur Y2",
-        "unique_id": "ogrzewanie_temperatura_zasilania_y2",
+        "unique_id": "heating_water_y2",
         "model_path": __file__,
         "data_type": "uint16",
         "input_type": "holding",
@@ -713,7 +713,7 @@ ENTITIES = [
     },
     {
         "name": "Opvarmning fremløbstemperatur Y3",
-        "unique_id": "ogrzewanie_temperatura_zasilania_y3",
+        "unique_id": "heating_water_y3",
         "model_path": __file__,
         "data_type": "uint16",
         "input_type": "holding",
@@ -746,7 +746,7 @@ ENTITIES = [
     },
     {
         "name": "Opvarmning fremløbstemperatur Y4",
-        "unique_id": "ogrzewanie_temperatura_zasilania_y4",
+        "unique_id": "heating_water_y4",
         "model_path": __file__,
         "data_type": "uint16",
         "input_type": "holding",
@@ -779,7 +779,7 @@ ENTITIES = [
     },
     {
         "name": "Varmtvand udendørstemperatur X1",
-        "unique_id": "cwu_temperatura_zewnetrzna_x1",
+        "unique_id": "dhw_ambient_x1",
         "model_path": __file__,
         "data_type": "int16",
         "input_type": "holding",
@@ -812,7 +812,7 @@ ENTITIES = [
     },
     {
         "name": "Varmtvand udendørstemperatur X2",
-        "unique_id": "cwu_temperatura_zewnetrzna_x2",
+        "unique_id": "dhw_ambient_x2",
         "model_path": __file__,
         "data_type": "int16",
         "input_type": "holding",
@@ -845,7 +845,7 @@ ENTITIES = [
     },
     {
         "name": "Varmtvand udendørstemperatur X3",
-        "unique_id": "cwu_temperatura_zewnetrzna_x3",
+        "unique_id": "dhw_ambient_x3",
         "model_path": __file__,
         "data_type": "int16",
         "input_type": "holding",
@@ -878,7 +878,7 @@ ENTITIES = [
     },
     {
         "name": "Varmtvand udendørstemperatur X4",
-        "unique_id": "cwu_temperatura_zewnetrzna_x4",
+        "unique_id": "dhw_ambient_x4",
         "model_path": __file__,
         "data_type": "int16",
         "input_type": "holding",
@@ -911,7 +911,7 @@ ENTITIES = [
     },
     {
         "name": "Varmtvand fremløbstemperatur Y1",
-        "unique_id": "cwu_temperatura_zasilania_y1",
+        "unique_id": "dwh_water_y1",
         "model_path": __file__,
         "data_type": "uint16",
         "input_type": "holding",
@@ -944,7 +944,7 @@ ENTITIES = [
     },
     {
         "name": "Varmtvand fremløbstemperatur Y2",
-        "unique_id": "cwu_temperatura_zasilania_y2",
+        "unique_id": "dwh_water_y2",
         "model_path": __file__,
         "data_type": "uint16",
         "input_type": "holding",
@@ -977,7 +977,7 @@ ENTITIES = [
     },
     {
         "name": "Varmtvand fremløbstemperatur Y3",
-        "unique_id": "cwu_temperatura_zasilania_y3",
+        "unique_id": "dwh_water_y3",
         "model_path": __file__,
         "data_type": "uint16",
         "input_type": "holding",
@@ -1010,7 +1010,7 @@ ENTITIES = [
     },
     {
         "name": "Varmtvand fremløbstemperatur Y4",
-        "unique_id": "cwu_temperatura_zasilania_y4",
+        "unique_id": "dwh_water_y4",
         "model_path": __file__,
         "data_type": "uint16",
         "input_type": "holding",

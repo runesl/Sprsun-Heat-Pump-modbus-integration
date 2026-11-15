@@ -1,22 +1,8 @@
 SENSORS = [
 
     {
-        "unique_id": "d07_zaw_3_drog",
-        "name": "3-vejs ventil position",
-        "register": 11,
-        "icon": "mdi:valve-open",
-        "mapping": {
-            1: "Varmtvand",
-            2: "Opvarmning",
-        },
-        "icon_map": {
-            1: "mdi:valve-open",
-            2: "mdi:valve-closed",
-        },
-    },
-    {
         "name": "Returtemperatur",
-        "unique_id": "temp_powrotu",
+        "unique_id": "temp_return",
         "register": 188,
         "unit": "°C",
         "device_class": "temperature",
@@ -27,7 +13,7 @@ SENSORS = [
     },
     {
         "name": "Fremløbstemperatur",
-        "unique_id": "temp_zasilania",
+        "unique_id": "temp_supply",
         "register": 189,
         "unit": "°C",
         "device_class": "temperature",
@@ -38,7 +24,7 @@ SENSORS = [
     },
     {
         "name": "Udendørstemperatur",
-        "unique_id": "temp_zewnetrzna",
+        "unique_id": "temp_ambient",
         "register": 190,
         "unit": "°C",
         "device_class": "temperature",
@@ -49,7 +35,7 @@ SENSORS = [
     },
     {
         "name": "Kompressionstemperatur",
-        "unique_id": "temp_sprezania",
+        "unique_id": "temp_compression",
         "register": 191,
         "unit": "°C",
         "device_class": "temperature",
@@ -60,7 +46,7 @@ SENSORS = [
     },
     {
         "name": "Sugetemperatur",
-        "unique_id": "temp_ssania",
+        "unique_id": "temp_suction",
         "register": 192,
         "unit": "°C",
         "device_class": "temperature",
@@ -71,7 +57,7 @@ SENSORS = [
     },
     {
         "name": "Kompressionstryk",
-        "unique_id": "cisnienie_sprezania",
+        "unique_id": "pressure_compression",
         "register": 193,
         "unit": "bar",
         "device_class": "pressure",
@@ -82,7 +68,7 @@ SENSORS = [
     },
     {
         "name": "Sugetryk",
-        "unique_id": "cisnienie_ssania",
+        "unique_id": "pressure_suction",
         "register": 194,
         "unit": "bar",
         "device_class": "pressure",
@@ -92,7 +78,7 @@ SENSORS = [
     },
     {
         "name": "Varmtvandstemperatur",
-        "unique_id": "temp_cwu",
+        "unique_id": "temp_hot_water",
         "register": 195,
         "unit": "°C",
         "device_class": "temperature",
@@ -103,7 +89,7 @@ SENSORS = [
     },
     {
         "name": "Fordampertemperatur",
-        "unique_id": "temp_parownika",
+        "unique_id": "temp_evaporator",
         "register": 196,
         "unit": "°C",
         "device_class": "temperature",
@@ -207,8 +193,8 @@ SENSORS = [
         "icon": "mdi:information",
         "mapping": {
             0: "OK",
-            1: "Styring",
-            2: "Grænseværdi",
+            1: "Kontrolleret",
+            2: "Begrænset",
         },
         "icon_map": {
             0: "mdi:check-circle",
@@ -223,12 +209,12 @@ SENSORS = [
         "scale": 1,
         "icon": "mdi:information",
         "mapping": {
-            0: "OK",
+            0: "N/A",
             1: "OK",
-            2: "Lav overhedning",
-            3: "Lavt tryk",
-            4: "Højt tryk",
-            5: "Høj kondensatortemperatur",
+            2: "Lav overhedning!",
+            3: "Lavt tryk!",
+            4: "Højt tryk!",
+            5: "Høj kondensatortemperatur!",
         },
         "icon_map": {
             0: "mdi:check-circle",
@@ -241,7 +227,7 @@ SENSORS = [
     },
     {
         "name": "Overhedningstemperatur",
-        "unique_id": "przegrzanie",
+        "unique_id": "temp_overheat",
         "register": 211,
         "unit": "°C",
         "device_class": "temperature",
@@ -251,8 +237,8 @@ SENSORS = [
         "icon": "mdi:coolant-temperature",
     },
     {
-        "name": "Pumpens driftstilstand",
-        "unique_id": "tryb_pracy_pompy",
+        "name": "work_mode",
+        "unique_id": "Arbejdstilstand",
         "register": 215,
         "scale": 1,
         "icon": "mdi:information",
@@ -314,49 +300,49 @@ SENSORS = [
     },
     {
         "name": "Programversion 1",
-        "unique_id": "wersja_programu_1",
+        "unique_id": "program_version_1",
         "register": 325,
         "scale": 1,
         "icon": "mdi:information",
     },
     {
         "name": "Programversion 2",
-        "unique_id": "wersja_programu_2",
+        "unique_id": "program_version_2",
         "register": 326,
         "scale": 1,
         "icon": "mdi:information",
     },
     {
         "name": "Programversion 3",
-        "unique_id": "wersja_programu_3",
+        "unique_id": "program_version_3",
         "register": 327,
         "scale": 1,
         "icon": "mdi:information",
     },
     {
-        "name": "Pumpe model 1",
-        "unique_id": "pompa_model_1",
+        "name": "Varmepumpe model 1",
+        "unique_id": "heat_pump_model_1",
         "register": 328,
         "scale": 1,
         "icon": "mdi:information",
     },
     {
-        "name": "Pumpe model 2",
-        "unique_id": "pompa_model_2",
+        "name": "Varmepumpe model 2",
+        "unique_id": "heat_pump_model_2",
         "register": 329,
         "scale": 1,
         "icon": "mdi:information",
     },
     {
-        "name": "Pumpe model 3",
-        "unique_id": "pompa_model_3",
+        "name": "Varmepumpe model 3",
+        "unique_id": "heat_pump_model_3",
         "register": 330,
         "scale": 1,
         "icon": "mdi:information",
     },
     {
-        "name": "Effektforbrug",
-        "unique_id": "moc_pobierana",
+        "name": "BLDC Effektforbrug",
+        "unique_id": "blcd_power_usage",
         "register": 333,
         "unit": "W",
         "device_class": "power",
@@ -365,8 +351,8 @@ SENSORS = [
         "icon": "mdi:flash",
     },
     {
-        "name": "Inverterspænding",
-        "unique_id": "napiecie_falownika",
+        "name": "BLDC spænding",
+        "unique_id": "blcd_voltage",
         "register": 334,
         "unit": "V",
         "device_class": "voltage",
@@ -375,8 +361,8 @@ SENSORS = [
         "icon": "mdi:alpha-v-circle",
     },
     {
-        "name": "Inverterstrøm",
-        "unique_id": "prad_falownika",
+        "name": "BLDC Strøm",
+        "unique_id": "blcd_current",
         "register": 335,
         "unit": "A",
         "device_class": "current",

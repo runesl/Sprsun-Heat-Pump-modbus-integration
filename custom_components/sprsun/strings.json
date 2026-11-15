@@ -11,6 +11,15 @@
           "scan_interval": "Czas odpytywania (sekundy)",
           "model": "Model pompy"
         }
+      },
+      "reconfigure": {
+        "title": "Zaktualizuj połączenie z pompą Sprsun",
+        "description": "Zmień adres IP, port lub Unit ID, jeśli urządzenie EW11 zmieniło adres. Historia danych zostanie zachowana.",
+        "data": {
+          "host": "Adres IP pompy",
+          "port": "Port Modbus TCP",
+          "unit_id": "Unit ID (adres Modbus)"
+        }
       }
     },
     "error": {

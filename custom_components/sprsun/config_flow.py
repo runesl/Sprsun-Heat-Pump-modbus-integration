@@ -105,6 +105,73 @@ class SprsunConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
+    async def async_step_reconfigure(self, user_input: dict[str, Any] | None = None):
+        """Allow updating host/port/unit_id of an existing entry (e.g. after the EW11 IP changed)."""
+        errors = {}
+        reconfigure_entry = self._get_reconfigure_entry()
+        data = reconfigure_entry.data
+
+        if user_input is not None:
+            if not user_input[CONF_HOST]:
+                errors[CONF_HOST] = "host_required"
+
+            if user_input[CONF_PORT] < 1 or user_input[CONF_PORT] > 65535:
+                errors[CONF_PORT] = "invalid_port"
+
+            if user_input[CONF_UNIT_ID] < 1 or user_input[CONF_UNIT_ID] > 255:
+                errors[CONF_UNIT_ID] = "invalid_unit_id"
+
+            if not errors:
+                for entry in self._async_current_entries():
+                    if (
+                        entry.entry_id != reconfigure_entry.entry_id
+                        and entry.data.get(CONF_HOST) == user_input[CONF_HOST]
+                    ):
+                        errors[CONF_HOST] = "already_configured"
+
+            if not errors:
+                return self.async_update_reload_and_abort(
+                    reconfigure_entry,
+                    data={
+                        **data,
+                        CONF_HOST: user_input[CONF_HOST],
+                        CONF_PORT: user_input[CONF_PORT],
+                        CONF_UNIT_ID: user_input[CONF_UNIT_ID],
+                    },
+                )
+
+        schema = vol.Schema(
+            {
+                vol.Required(CONF_HOST, default=data.get(CONF_HOST)): selector.TextSelector(
+                    selector.TextSelectorConfig(
+                        type=selector.TextSelectorType.TEXT,
+                    )
+                ),
+                vol.Required(CONF_PORT, default=data.get(CONF_PORT, DEFAULT_PORT)): selector.NumberSelector(
+                    selector.NumberSelectorConfig(
+                        min=1,
+                        max=65535,
+                        step=1,
+                        mode=selector.NumberSelectorMode.BOX,
+                    )
+                ),
+                vol.Required(CONF_UNIT_ID, default=data.get(CONF_UNIT_ID, DEFAULT_UNIT_ID)): selector.NumberSelector(
+                    selector.NumberSelectorConfig(
+                        min=1,
+                        max=255,
+                        step=1,
+                        mode=selector.NumberSelectorMode.BOX,
+                    )
+                ),
+            }
+        )
+
+        return self.async_show_form(
+            step_id="reconfigure",
+            data_schema=schema,
+            errors=errors,
+        )
+
     @staticmethod
     @callback
     def async_get_options_flow(config_entry):

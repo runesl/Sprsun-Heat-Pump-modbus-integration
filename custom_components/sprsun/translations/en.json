@@ -17,6 +17,15 @@
           "scan_interval": "Polling interval (s)",
           "model": "Pump model"
         }
+      },
+      "reconfigure": {
+        "title": "Update Sprsun heat-pump connection",
+        "description": "Update the IP address, port, or Unit ID if the EW11 device moved to a new address. Historical data is preserved.",
+        "data": {
+          "host": "Heat-pump IP address",
+          "port": "Modbus TCP port",
+          "unit_id": "Unit ID / Slave ID"
+        }
       }
     },
     "error": {

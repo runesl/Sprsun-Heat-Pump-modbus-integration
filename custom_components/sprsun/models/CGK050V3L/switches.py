@@ -30,27 +30,13 @@ ENTITIES = [
         },
     },
     {
-        "name": "Manuel indtastning af BLCD-parametre",
+        "name": "Manuel indtastning af BLDC-parameter",
         "address": 14,
         "command_on": 1,
         "command_off": 0,
         "write_type": "coil",
         "verify": {
             "address": 14,
-            "delay": 0,
-            "input_type": "discrete",
-            "state_on": True,
-            "state_off": False,
-        },
-    },
-    {
-        "name": "Network EN",
-        "address": 34,
-        "command_on": 1,
-        "command_off": 0,
-        "write_type": "coil",
-        "verify": {
-            "address": 34,
             "delay": 0,
             "input_type": "discrete",
             "state_on": True,
@@ -104,7 +90,7 @@ ENTITIES = [
         "icon_off": "mdi:timer-off",
     },
     {
-        "name": "Aktiver pumpe",
+        "name": "Tænd",
         "address": 40,
         "command_on": 1,
         "command_off": 0,
