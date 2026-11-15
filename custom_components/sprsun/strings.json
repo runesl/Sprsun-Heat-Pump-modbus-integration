@@ -2,33 +2,33 @@
   "config": {
     "step": {
       "user": {
-        "title": "Konfiguracja pompy ciepła Sprsun",
-        "description": "Wprowadź dane połączenia z pompą ciepła. Podaj adres IP, port, wprowadź jej adres modbus, czas odpytywania. Na końcu wybierz z listy twój model pompy Sprsun.",
+        "title": "Sprsun heat-pump setup",
+        "description": "Enter the heat pump's IP address, port, Modbus address, and polling interval. Then select your Sprsun heat-pump model.",
         "data": {
-          "host": "Adres IP pompy",
-          "port": "Port Modbus TCP",
-          "unit_id": "Unit ID (adres Modbus)",
-          "scan_interval": "Czas odpytywania (sekundy)",
-          "model": "Model pompy"
+          "host": "Heat-pump IP address",
+          "port": "Modbus TCP port",
+          "unit_id": "Unit ID (Modbus address)",
+          "scan_interval": "Polling interval (seconds)",
+          "model": "Pump model"
         }
       },
       "reconfigure": {
-        "title": "Zaktualizuj połączenie z pompą Sprsun",
-        "description": "Zmień adres IP, port, Unit ID lub czas odpytywania. Historia danych zostanie zachowana.",
+        "title": "Update Sprsun heat-pump connection",
+        "description": "Update the IP address, port, Unit ID, or polling interval. Historical data is preserved.",
         "data": {
-          "host": "Adres IP pompy",
-          "port": "Port Modbus TCP",
-          "unit_id": "Unit ID (adres Modbus)",
-          "scan_interval": "Czas odpytywania (sekundy)"
+          "host": "Heat-pump IP address",
+          "port": "Modbus TCP port",
+          "unit_id": "Unit ID (Modbus address)",
+          "scan_interval": "Polling interval (seconds)"
         }
       }
     },
     "error": {
-      "host_required": "Adres IP jest wymagany.",
-      "invalid_port": "Port musi być liczbą z zakresu 1–65535.",
-      "invalid_unit_id": "Unit ID musi być liczbą z zakresu 1–255.",
-      "min_5": "Minimalna wartość to 5 sekund.",
-      "already_configured": "Integracja z tym adresem IP już istnieje."
+      "host_required": "IP address is required.",
+      "invalid_port": "Port must be a number between 1 and 65535.",
+      "invalid_unit_id": "Unit ID must be a number between 1 and 255.",
+      "min_5": "Minimum value is 5 seconds.",
+      "already_configured": "An integration with this IP address already exists."
     }
   }
 }
